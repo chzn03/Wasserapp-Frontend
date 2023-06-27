@@ -1,7 +1,11 @@
 <template>
+
+
   <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
+    <li><a href="#">Wasserstand</a></li>
+    <li><a href="#">Tagesziel</a></li>
   </nav>
   <router-view/>
 </template>
