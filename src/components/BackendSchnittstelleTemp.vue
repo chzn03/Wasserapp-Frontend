@@ -76,23 +76,8 @@ export default {
             console.log('Success', data)
           })
           .catch(error => console.log('error', error))
-    },
-    async setup () {
-      if (this.$root.authenticated) {
-        this.claims = await this.$auth.getUser()
-        // this.accessToken = await this.$auth.getAccessToken()
-      }
     }
-  },
-  async created () {
-    await this.setup()
-    this.loadWasser()
-  },
-    mounted() {
-    },
-    updated() {
-      console.log("UPDATED!")
-    }
+  }
 }
 </script>
 
