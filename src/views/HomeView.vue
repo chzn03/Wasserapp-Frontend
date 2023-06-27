@@ -6,7 +6,7 @@
 
 <script>
 // @ is an alias to /src
-import BackendSchnittstelleTemp from '@/components/BackendSchnittstellTemp.vue'
+import BackendSchnittstelleTemp from '@/components/BackendSchnittstelleTemp.vue'
 
 export default {
   name: 'HomeView',

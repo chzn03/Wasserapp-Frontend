@@ -4,18 +4,29 @@
     <input v-model="nameField" placeholder="Name" type="text" ref="nameInput">
     <input v-model="amountField" placeholder="Amount" @keyup.enter="save()">
     <button type="button" @click="save()">Save</button>
-    <input v-model="filterCrit" placeholder="filter criterion">
-
   </div>
   <div>
-    <table class="User">
-      <thead>
-      <tr>
-        <th>Name</th>
-        <th>Amount</th>
-      </tr>
-      </thead>
-    </table>
+  <table>
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-if="items.length === 0">
+      <td colspan="2">No Users yet</td>
+    </tr>
+    <tr v-for="item in items" :key="item.id">
+      <td>{{item.name}}</td>
+      <td>{{item.amount}}</td>
+    </tr>
+    <tr>
+      <td>{{ nameField }}</td>
+      <td>{{ amountField }}</td>
+    </tr>
+    </tbody>
+  </table>
   </div>
 </template>
 
@@ -25,24 +36,19 @@ export default {
   props: ['title'],
   data() {
     return {
+      items: [],
       nameField: '',
       amountField: '',
       claims: '',
-      accessToken: '',
-      filterCrit: ''
+      accessToken: ''
     }
   },
   methods: {
-    myFilterFunc (crit) {
-      return this.items.filter(
-          it => crit.length < 1 ||
-              it.name.toLowerCase().includes(crit.toLowerCase()))
-    },
     loadWasser() {
       const endpoint = 'http://localhost:8080/users'
       const reqOptions = {
         method: 'GET',
-        redirect: 'follow'
+        redirect: 'follow',
       }
       fetch(endpoint, reqOptions)
           .then(response => response.json)
