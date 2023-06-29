@@ -29,7 +29,7 @@
         <tbody>
         <tr>
           <td>{{ daytime }}</td>
-          <td>Row 1, Cell 2</td>
+          <td>{{amount}}</td>
         </tr>
         </tbody>
       </table>
