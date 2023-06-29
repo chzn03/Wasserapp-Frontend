@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    <backend-schnittstelle-temp title="lets talk to the Backend"/>
+    title
+    <backend-schnittstelle-temp title="lets talk to the Back"/>
   </div>
 </template>
 
