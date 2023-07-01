@@ -19,21 +19,30 @@
 
     <main>
       <h2>Wasserstand</h2>
-      <table>
+      <table id = "Watertable">
+
         <thead>
         <tr>
           <th>Tag, Zeit</th>
           <th>Menge</th>
         </tr>
         </thead>
-        <tbody>
+      </table>
+        <tbody id = "tablebody">
         <tr>
-          <td>{{ daytime }}</td>
+          <td> {{dayAndTime}} </td>
           <td>{{amount}}</td>
         </tr>
         </tbody>
-      </table>
     </main>
+
+    <form id="inputForm">
+      <input type="text" id="Amount" placeholder="Enter Amount">
+
+      <button type="submit">Add</button>
+    </form>
+
+
 
     <section id="Verlauf">
       <h2>Verlauf</h2>
@@ -58,6 +67,8 @@ export default {
   },
   mounted() {
     this.setCurrentTime();
+
+
   },
   methods: {
     setCurrentTime() {
@@ -73,13 +84,30 @@ export default {
         this.daytime = 'Gute Abend';
       }
 
+
       const formattedHour = ('0' + currentHour).slice(-2);
       const formattedMinute = ('' + currentMin).slice(-2);
 
-      this.greeting = `${this.daytime}! Es ist ${formattedHour}:${formattedMinute}`;
+      this.greeting = `${this.daytime}!  Es ist ${formattedHour}:${formattedMinute}`;
+
+
     }
   }
+
 };
+
+new Vue({
+  el: '#app',
+  data: {dayAndTime: ''
+  },
+  created() {
+    const currentDate = new Date();
+    const day = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+    const time = currentDate.toLocaleTimeString('en-US');
+    this.dayAndTime = `${day}, ${time}`;
+  }
+});
+
 </script>
 
 <style scoped>
