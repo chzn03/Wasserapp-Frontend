@@ -34,8 +34,8 @@
         </tr>
         </tbody>
       </table>
-      <button onclick="addRow()">Add</button>
-      <button onclick="deleteRow(this)">Delete</button>
+      <button type="button" onclick="addRow()">Add</button>
+      <button type="button" onclick="deleteRow(this)">Delete</button>
     </main>
 
     <section id="Verlauf">
@@ -56,20 +56,12 @@ function addRow(button) {
 
 }
 
-function invtervall() {
-
-}
-
 export default {
   data() {
     return {
       greeting: '',
       daytime: ''
     };
-  },
-  mounted() {
-    this.setCurrentTime();
-    this.function();
   },
   methods: {
     setCurrentTime() {
@@ -90,10 +82,10 @@ export default {
 
       this.greeting = `${this.daytime}! Es ist ${formattedHour}:${formattedMinute}`;
     },
-    function invtervall(){
+    invtervall(){
       const targetHour = 17;
 
-      const interval = setInterval(function (){
+      const interval = setInterval(function(){
         const currentTime = new Date();
         const currentHour = currentTime.getHours();
 
@@ -109,25 +101,31 @@ export default {
         const farbeÄndern = document.getElementById("Farbe");
         farbeÄndern.style.background = "red";
       }
+    },
+    addRow(button) {
+      var table = document.getElementById("myTable");
+      var row = table.insertRow(table.rows.length);
+      var nameCell = row.insertCell(0);
+      var ageCell = row.insertCell(1);
+      var countryCell = row.insertCell(2);
+      var actionCell = row.insertCell(3);
+
+      nameCell.innerHTML = "New Name";
+      ageCell.innerHTML = "New Age";
+      countryCell.innerHTML = "New Country";
+      actionCell.innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
+    },
+
+    deleteRow(button) {
+      var row = button.parentNode.parentNode;
+      row.parentNode.removeChild(row);
+    },
+    mounted(){
+      this.setCurrentTime()
+      this.invtervall()
+      this.addRow(button)
+      this.deleteRow(button)
     }
-    function addRow(button){
-  var table = document.getElementById("myTable");
-  var row = table.insertRow(table.rows.length);
-  var nameCell = row.insertCell(0);
-  var ageCell = row.insertCell(1);
-  var countryCell = row.insertCell(2);
-  var actionCell = row.insertCell(3);
-
-  nameCell.innerHTML = "New Name";
-  ageCell.innerHTML = "New Age";
-  countryCell.innerHTML = "New Country";
-  actionCell.innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
-}
-
-function deleteRow(button) {
-  var row = button.parentNode.parentNode;
-  row.parentNode.removeChild(row);
-}
   }
 };
 </script>
