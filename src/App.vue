@@ -19,7 +19,7 @@
     </section>
 
     <main>
-      <h2>Wasserstand</h2>
+      <h1 id ="Tabelleüberschrift">Wasserstand</h1>
       <table id = "Wasserstand">
         <thead>
         <tr>
@@ -29,9 +29,12 @@
         </thead>
         <tbody>
         <tr>
-          <td>{{ daytime }}</td>
-          <td>{{amount}}</td>
+          <td>{{ "4.07.23, 11 uhr" }}</td>
+          <td>{{"0.2 ml"}}</td>
         </tr>
+        <tr>
+          <td>{{ "4.07.23, 12 uhr" }}</td>
+          <td>{{"0.2 ml"}}</td></tr>
         </tbody>
       </table>
       <button type="button" onclick="addRow()">Add</button>
@@ -52,10 +55,6 @@
 </template>
 
 <script>
-function addRow(button) {
-
-}
-
 export default {
   data() {
     return {
@@ -97,22 +96,21 @@ export default {
 
       function changeHTML(){
         const reminder = document.getElementById("Reminder");
-        reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen!!!!!!";
+        reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen !!";
         const farbeÄndern = document.getElementById("Farbe");
         farbeÄndern.style.background = "red";
       }
     },
     addRow(button) {
-      var table = document.getElementById("myTable");
+      var table = document.getElementById("Wasserstand");
       var row = table.insertRow(table.rows.length);
       var nameCell = row.insertCell(0);
       var ageCell = row.insertCell(1);
       var countryCell = row.insertCell(2);
       var actionCell = row.insertCell(3);
 
-      nameCell.innerHTML = "New Name";
-      ageCell.innerHTML = "New Age";
-      countryCell.innerHTML = "New Country";
+      TagZeitCell.innerHTML = "New Tag,Zeit ";
+      mengeCell.innerHTML = "New Menge";
       actionCell.innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
     },
 
@@ -141,10 +139,11 @@ export default {
 
 body {
   font-family: Montserrat;
+
 }
 
 nav {
-  background: #0082e6;
+  background: cornflowerblue;
   height: 80px;
   width: 100%;
 }
@@ -163,7 +162,7 @@ label {
 }
 
 nav ul {
-  float: right;
+  float: left;
   margin-right: 20px;
 }
 
@@ -178,10 +177,26 @@ nav ul li a {
   font-size: 17px;
   text-transform: uppercase;
 }
+header {
+  background-color: #f2f2f2;
+  padding: 20px;
+  text-align: left;
+}
+#intro{
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+#Verlauf{
+margin: 20px;
+}
 
 table {
   width: 100%;
   border-collapse: collapse;
+  margin: 20px;
+  text-align: left;
 }
 
 table th, table td {
@@ -191,7 +206,7 @@ table th, table td {
 }
 
 table th {
-  background-color: #f2f2f2;
+  background-color: cornflowerblue;
 }
 
 table tr:nth-child(even) {
@@ -202,4 +217,21 @@ table tr:hover {
   background-color: #f5f5f5;
 }
 
+.content-table tbody tr{
+border-bottom: 1px solid steelblue;
+}
+
+button{
+  text-align: center;
+  float: right;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #0082e6;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 </style>
