@@ -1,10 +1,16 @@
 <template>
+  <section id= "background">
+    <div class = "wave wave1"></div>
+    <div class = "wave wave2"></div>
+    <div class = "wave wave3"></div>
+  </section>
+
   <div id="app">
     <h1>{{ greeting }}</h1>
 
-    <header>
+    <header id = "Navigationbar">
       <h1>Drinking Water is fun!</h1>
-      <nav id = "Farbe">
+      <nav>
         <div id = "Reminder">Du hast noch genug Zeit um dein Ziel heute zu erreichen</div>
         <ul>
           <li><a href="#">Home</a></li>
@@ -18,6 +24,8 @@
       <p>Mit dieser App kannst du deinen Wasserverbrauch verfolgen. Starte jetzt!!</p>
     </section>
 
+
+
     <main>
       <h1 id ="Tabelleüberschrift">Wasserstand</h1>
       <table id = "Wasserstand">
@@ -25,20 +33,29 @@
         <tr>
           <th>Tag, Zeit</th>
           <th>Menge</th>
+
         </tr>
         </thead>
         <tbody>
         <tr>
-          <td>{{ "4.07.23, 11 uhr" }}</td>
-          <td>{{"0.2 ml"}}</td>
+          <td>Row1 cell1</td>
+          <td>Row1 cell2</td>
+          <td><button type="button" @click="deleteRow(index)">Delete</button></td> <!-- Add the delete button -->
+        </tr>
+        <tr>
+          <td>Row2 cell1</td>
+          <td>Row2 cell2</td><td><button type="button" @click="deleteRow(index)">Delete</button></td> <!-- Add the delete button -->
         </tr>
         <tr>
           <td>{{ "4.07.23, 12 uhr" }}</td>
-          <td>{{"0.2 ml"}}</td></tr>
+          <td>{{"0.2 ml"}}</td>
+        <td><button type="button" @click="deleteRow(index)">Delete</button></td>
+        </tr>
         </tbody>
       </table>
-      <button type="button" onclick="addRow()">Add</button>
-      <button type="button" onclick="deleteRow(this)">Delete</button>
+
+      <button type="button" @click="addRow()">Add</button>
+
     </main>
 
     <section id="Verlauf">
@@ -55,7 +72,9 @@
 </template>
 
 <script>
+
 export default {
+
   data() {
     return {
       greeting: '',
@@ -63,68 +82,77 @@ export default {
     };
   },
   methods: {
-    setCurrentTime() {
-      const currentDate = new Date();
-      const currentHour = currentDate.getHours();
-      const currentMin = currentDate.getMinutes();
 
-      if (currentHour >= 5 && currentHour < 12) {
-        this.daytime = 'Guten Morgen';
-      } else if (currentHour >= 12 && currentHour < 18) {
-        this.daytime = 'Mittag';
-      } else {
-        this.daytime = 'Gute Abend';
-      }
 
-      const formattedHour = ('0' + currentHour).slice(-2);
-      const formattedMinute = ('0' + currentMin).slice(-2);
 
-      this.greeting = `${this.daytime}! Es ist ${formattedHour}:${formattedMinute}`;
-    },
-    invtervall(){
-      const targetHour = 17;
+setCurrentTime()
+{
+  const currentDate = new Date();
+  const currentHour = currentDate.getHours();
+  const currentMin = currentDate.getMinutes();
 
-      const interval = setInterval(function(){
-        const currentTime = new Date();
-        const currentHour = currentTime.getHours();
-
-        while (currentHour >= targetHour) {
-          clearInterval(interval);
-          changeHTML();
-        }
-      }, 1000)
-
-      function changeHTML(){
-        const reminder = document.getElementById("Reminder");
-        reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen !!";
-        const farbeÄndern = document.getElementById("Farbe");
-        farbeÄndern.style.background = "red";
-      }
-    },
-    addRow(button) {
-      var table = document.getElementById("Wasserstand");
-      var row = table.insertRow(table.rows.length);
-      var nameCell = row.insertCell(0);
-      var ageCell = row.insertCell(1);
-      var countryCell = row.insertCell(2);
-      var actionCell = row.insertCell(3);
-
-      TagZeitCell.innerHTML = "New Tag,Zeit ";
-      mengeCell.innerHTML = "New Menge";
-      actionCell.innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
-    },
-
-    deleteRow(button) {
-      var row = button.parentNode.parentNode;
-      row.parentNode.removeChild(row);
-    },
-    mounted(){
-      this.setCurrentTime()
-      this.invtervall()
-      this.addRow(button)
-      this.deleteRow(button)
-    }
+  if (currentHour >= 5 && currentHour < 12) {
+    this.daytime = 'Guten Morgen';
+  } else if (currentHour >= 12 && currentHour < 18) {
+    this.daytime = 'Mittag';
+  } else {
+    this.daytime = 'Gute Abend';
   }
+
+  const formattedHour = ('0' + currentHour).slice(-2);
+  const formattedMinute = ('0' + currentMin).slice(-2);
+
+  this.greeting = `${this.daytime}! Es ist ${formattedHour}:${formattedMinute}`;
+},
+
+addRow() {
+  const table = document.getElementById("Wasserstand");
+  const row = table.insertRow(-1); // Insert row at the end of the table
+  const cell1 = row.insertCell(0); // Insert cells for the row
+  const cell2 = row.insertCell(1);
+
+  cell1.innerHTML = "New Cell 1"; // Set content for the cells
+  cell2.innerHTML = "New Cell 2";
+}
+,
+    deleteRow() {
+
+      }
+
+    }
+    ,
+invtervall()
+{
+  const targetHour = 17;
+
+  const interval = setInterval(function () {
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+
+    while (currentHour >= targetHour) {
+      clearInterval(interval);
+      changeHTML();
+    }
+  }, 1000)
+
+  function changeHTML() {
+    const reminder = document.getElementById("Reminder");
+    reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen !!";
+    const farbeÄndern = document.getElementById("Farbe");
+    farbeÄndern.style.background = "red";
+  }
+}
+,
+
+mounted()
+{
+  this.setCurrentTime()
+  this.invtervall()
+
+}
+
+
+
 };
 </script>
 
@@ -137,8 +165,9 @@ export default {
   box-sizing: border-box;
 }
 
-body {
+body{
   font-family: Montserrat;
+  background-color: black;
 
 }
 
@@ -157,7 +186,7 @@ label {
 }
 
 #Reminder{
-  color : black;
+  color : #dddddd;
   font-size : 20px;
 }
 
@@ -178,18 +207,26 @@ nav ul li a {
   text-transform: uppercase;
 }
 header {
-  background-color: #f2f2f2;
+  color: #dddddd;
   padding: 20px;
   text-align: left;
 }
 #intro{
+  color: #dddddd;
   font-size: 20px;
+  font-style: italic ;
   margin-top: 20px;
   margin-bottom: 20px;
   text-align: left;
 }
+
 #Verlauf{
+  color: #dddddd;
 margin: 20px;
+}
+#Verlauf h2 {
+font-style: inherit;
+
 }
 
 table {
@@ -226,12 +263,34 @@ button{
   float: right;
   display: inline-block;
   padding: 10px 20px;
-  background-color: #0082e6;
-  color: #fff;
+  background-color: white;
+  color: cornflowerblue;
   border: none;
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+#background{
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  background: #3586ff;
+  overflow: hidden;
+  z-index: -1;
+}
+section.wave{
+position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: url(../../../Downloads/wave.png);
+background-size: 1000px 100px;
+z-index: 1;
+}
+section .wave.wave1{
+  animation: animate 30s linear infinite;
 }
 </style>
