@@ -6,10 +6,10 @@
   </section>
 
   <div id="app">
-    <h1>{{ greeting }}</h1>
+    <h1 id= "greeting">{{ greeting }}</h1>
 
     <header id = "Navigationbar">
-      <h1>Drinking Water is fun!</h1>
+      <h1 id="namehead">Drinking Water is fun!</h1>
       <nav>
         <div id = "Reminder">Du hast noch genug Zeit um dein Ziel heute zu erreichen</div>
         <ul>
@@ -24,38 +24,39 @@
       <p>Mit dieser App kannst du deinen Wasserverbrauch verfolgen. Starte jetzt!!</p>
     </section>
 
-
-
     <main>
       <h1 id ="Tabelleüberschrift">Wasserstand</h1>
-      <table id = "Wasserstand">
+     Wie viel Wasser hast du getrunken ? (in Liter) <input type="number" name="amount" id="amount"/> <br><br/>
+      <button id="adding" type="button" @click="addRow()">Add</button> <br><br/>
+      <table  id = "Wasserstand" border="1">
         <thead>
         <tr>
           <th>Tag, Zeit</th>
           <th>Menge</th>
-
+          <th></th>
         </tr>
         </thead>
         <tbody>
-        <tr id="row1">
-          <td>Row1 cell1</td>
-          <td>Row1 cell2</td>
-          <td><button type="button" @click="deleteRow('row1')">Delete</button></td>
+        <tr id="row1" class="rowDesign">
+          <td>{{ "3.07.23, 13 uhr" }}</td>
+          <td>{{"0.2 ml"}}</td>
+          <td><button class="deletion" type="button" @click="deleteRow('row1')">Delete</button></td>
         </tr>
-        <tr id="row2">
+        <tr id="row2" class="rowDesign">
           <td>Row2 cell1</td>
           <td>Row2 cell2</td>
-          <td><button type="button" @click="deleteRow('row2')">Delete</button></td>
+          <td><button class="deletion" type="button" @click="deleteRow('row2')">Delete</button></td>
         </tr>
-        <tr id="row3">
+        <tr id="row3" class="rowDesign">
           <td>{{ "4.07.23, 12 uhr" }}</td>
           <td>{{"0.2 ml"}}</td>
-        <td><button type="button" @click="deleteRow('row3')">Delete</button></td>
+        <td><button class="deletion" type="button" @click="deleteRow('row3')">Delete</button></td>
         </tr>
+
         </tbody>
       </table>
 
-      <button type="button" @click="addRow()">Add</button>
+
 
     </main>
 
@@ -94,11 +95,11 @@ setCurrentTime()
   const currentMin = currentDate.getMinutes();
 
   if (currentHour >= 5 && currentHour < 12) {
-    this.daytime = 'Guten Morgen';
+    this.daytime = 'Morgen';
   } else if (currentHour >= 12 && currentHour < 18) {
     this.daytime = 'Mittag';
   } else {
-    this.daytime = 'Gute Abend';
+    this.daytime = 'Abend';
   }
 
   const formattedHour = ('0' + currentHour).slice(-2);
@@ -106,25 +107,46 @@ setCurrentTime()
 
   this.greeting = `${this.daytime}! Es ist ${formattedHour}:${formattedMinute}`;
 },
-
-addRow() {
-  const table = document.getElementById("Wasserstand");
-  const row = table.insertRow(-1); // Insert row at the end of the table
-  const cell1 = row.insertCell(0); // Insert cells for the row
-  const cell2 = row.insertCell(1);
-
-  cell1.innerHTML = "New Cell 1"; // Set content for the cells
-  cell2.innerHTML = "New Cell 2";
-}
-,
     deleteRow(rowId) {
-       const row = document.getElementById(rowId);
+      const row = document.getElementById(rowId);
       row.remove();
 
-      }
+    },
 
-    }
-    ,
+addRow() {
+  var amount = document.getElementById('amount').value;
+  var liters = parseFloat(amount) ;
+
+
+  const table = document.getElementById("Wasserstand");
+  const row = table.insertRow(-1);
+
+  const rowId = 'row' + (this.rowCounter + 1)
+  row.setAttribute('id',rowId);
+
+  const cell1 = row.insertCell(0);
+  const cell2 = row.insertCell(1);
+  const cell3 = row.insertCell(2);
+
+  const deleteButton = document.createElement('button'); // Create a new button element
+  deleteButton.innerText = 'Delete';
+  deleteButton.classList.add('deletion');
+
+  cell1.innerHTML = this.daytime;
+  cell2.innerHTML = liters.toFixed(1) +  "L";
+  cell3.appendChild(deleteButton)
+
+  deleteButton.addEventListener('click', () => {
+    this.deleteRow(rowId);
+  });
+  this.rowCounter++; // Increment the row counter
+
+  row.classList.add('rowDesign');
+
+},
+
+
+    },
 invtervall()
 {
   const targetHour = 17;
@@ -160,7 +182,7 @@ mounted()
 };
 </script>
 
-<style scoped>
+<style >
 * {
   padding: 1px;
   margin: 1px;
@@ -172,13 +194,19 @@ mounted()
 body{
   font-family: Montserrat;
   background-color: black;
-
+}
+#greeting{
+  color : white;
+}
+#namehead{
+  color: #3586ff;
 }
 
 nav {
   background: cornflowerblue;
   height: 80px;
   width: 100%;
+  margin: 5px;
 }
 
 label {
@@ -187,22 +215,21 @@ label {
   line-height: 80px;
   padding: 0 100px;
   font-weight: bold;
+  margin: 5px;
 }
 
 #Reminder{
-  color : #dddddd;
+  color : white;
   font-size : 20px;
 }
 
 nav ul {
   float: left;
-  margin-right: 20px;
 }
 
 nav ul li {
   display: inline-block;
   line-height: 80px;
-  margin: 0 5px;
 }
 
 nav ul li a {
@@ -211,17 +238,19 @@ nav ul li a {
   text-transform: uppercase;
 }
 header {
-  color: #dddddd;
+  background-color: white;
+  text-align: center;
   padding: 20px;
-  text-align: left;
+  margin: 50px;
 }
 #intro{
   color: #dddddd;
   font-size: 20px;
   font-style: italic ;
+  text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
-  text-align: left;
+
 }
 
 #Verlauf{
@@ -233,10 +262,15 @@ font-style: inherit;
 
 }
 
+#Tabelleüberschrift{
+  color: white;
+
+}
 table {
+  padding-top: -10px;
   width: 100%;
   border-collapse: collapse;
-  margin: 20px;
+  margin: 5px;
   text-align: left;
 }
 
@@ -250,19 +284,26 @@ table th {
   background-color: cornflowerblue;
 }
 
-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+ .rowDesign{
+  background-color: whitesmoke;
+   font-size: larger;
 }
 
-table tr:hover {
-  background-color: #f5f5f5;
-}
 
-.content-table tbody tr{
-border-bottom: 1px solid steelblue;
+#adding{
+  text-align: center;
+  float: left;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: white;
+  color: cornflowerblue;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
-
-button{
+.deletion{
   text-align: center;
   float: right;
   display: inline-block;
@@ -275,6 +316,7 @@ button{
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
 
 #background{
   position: absolute;
@@ -297,4 +339,5 @@ z-index: 1;
 section .wave.wave1{
   animation: animate 30s linear infinite;
 }
+
 </style>
