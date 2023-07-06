@@ -37,19 +37,20 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
+        <tr id="row1">
           <td>Row1 cell1</td>
           <td>Row1 cell2</td>
-          <td><button type="button" @click="deleteRow(index)">Delete</button></td> <!-- Add the delete button -->
+          <td><button type="button" @click="deleteRow('row1')">Delete</button></td>
         </tr>
-        <tr>
+        <tr id="row2">
           <td>Row2 cell1</td>
-          <td>Row2 cell2</td><td><button type="button" @click="deleteRow(index)">Delete</button></td> <!-- Add the delete button -->
+          <td>Row2 cell2</td>
+          <td><button type="button" @click="deleteRow('row2')">Delete</button></td>
         </tr>
-        <tr>
+        <tr id="row3">
           <td>{{ "4.07.23, 12 uhr" }}</td>
           <td>{{"0.2 ml"}}</td>
-        <td><button type="button" @click="deleteRow(index)">Delete</button></td>
+        <td><button type="button" @click="deleteRow('row3')">Delete</button></td>
         </tr>
         </tbody>
       </table>
@@ -74,6 +75,7 @@
 <script>
 
 export default {
+
 
   data() {
     return {
@@ -115,7 +117,9 @@ addRow() {
   cell2.innerHTML = "New Cell 2";
 }
 ,
-    deleteRow() {
+    deleteRow(rowId) {
+       const row = document.getElementById(rowId);
+      row.remove();
 
       }
 
