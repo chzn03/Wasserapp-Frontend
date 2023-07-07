@@ -6,27 +6,27 @@
     <button type="button" @click="save()">Save</button>
   </div>
   <div>
-  <table>
-    <thead>
-    <tr>
-      <th>Name</th>
-      <th>Amount</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-if="items.length === 0">
-      <td colspan="2">No Users yet</td>
-    </tr>
-    <tr v-for="item in items" :key="item.id">
-      <td>{{item.name}}</td>
-      <td>{{item.amount}}</td>
-    </tr>
-    <tr>
-      <td>{{ nameField }}</td>
-      <td>{{ amountField }}</td>
-    </tr>
-    </tbody>
-  </table>
+    <table>
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-if="items.length === 0">
+        <td colspan="2">No Users yet</td>
+      </tr>
+      <tr v-for="item in items" :key="item.id">
+        <td>{{item.name}}</td>
+        <td>{{item.amount}}</td>
+      </tr>
+      <tr>
+        <td>{{ nameField }}</td>
+        <td>{{ amountField }}</td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -38,9 +38,7 @@ export default {
     return {
       items: [],
       nameField: '',
-      amountField: '',
-      claims: '',
-      accessToken: ''
+      amountField: ''
     }
   },
   methods: {
@@ -60,7 +58,6 @@ export default {
     save() {
       const endpoint = 'http://localhost:8080/User'
       const data = {
-        name: this.nameField,
         amount: this.amountField
       }
       const reqOptions = {

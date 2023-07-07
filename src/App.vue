@@ -8,7 +8,7 @@
   <div id="app">
     <h1 id= "greeting">{{ greeting }}</h1>
 
-    <header id = "Navigationbar">
+    <header id = "Navigationsbar">
       <h1 id="namehead">Drinking Water is fun!</h1>
       <nav>
         <div id = "Reminder">Du hast noch genug Zeit um dein Ziel heute zu erreichen</div>
@@ -25,13 +25,15 @@
     </section>
 
     <main>
-      <h1 id ="Tabelleüberschrift">Wasserstand</h1>
-     Wie viel Wasser hast du getrunken ? (in Liter) <input type="number" name="amount" id="amount"/> <br><br/>
-      <button id="adding" type="button" @click="addRow()">Add</button> <br><br/>
+      <h1 id ="Tabellenüberschrift">Wasserstand</h1>
+      Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount" id="amount"/> <br><br/>
+      Wie viel Wasser hast du getrunken ? (in Liter) <input v-model="getrunkenField" type="number" name="getrunken" id="getrunken"/> <br><br/>
+      <button id="adding" type="button" @click="addRow(); save(); change()">Add</button> <br><br/>
       <table  id = "Wasserstand" border="1">
         <thead>
         <tr>
           <th>Tag, Zeit</th>
+          <th>Tagesziel</th>
           <th>Menge</th>
           <th></th>
         </tr>
@@ -39,16 +41,19 @@
         <tbody>
         <tr id="row1" class="rowDesign">
           <td>{{ "3.07.23, 13 uhr" }}</td>
+          <td>{{"5 Liter"}}</td>
           <td>{{"0.2 ml"}}</td>
           <td><button class="deletion" type="button" @click="deleteRow('row1')">Delete</button></td>
         </tr>
         <tr id="row2" class="rowDesign">
           <td>Row2 cell1</td>
           <td>Row2 cell2</td>
+          <td>Row2 cell3</td>
           <td><button class="deletion" type="button" @click="deleteRow('row2')">Delete</button></td>
         </tr>
         <tr id="row3" class="rowDesign">
           <td>{{ "4.07.23, 12 uhr" }}</td>
+          <td>{{"2,5 Liter"}}</td>
           <td>{{"0.2 ml"}}</td>
         <td><button class="deletion" type="button" @click="deleteRow('row3')">Delete</button></td>
         </tr>
@@ -75,110 +80,145 @@
 
 <script>
 
+let userId = 0;
+let getrunken = document.getElementById('getrunken').value;
 export default {
 
 
   data() {
     return {
       greeting: '',
-      daytime: ''
+      daytime: '',
+      getrunkenField: '',
+      amountField: ''
     };
   },
   methods: {
+    setCurrentTime() {
+      const currentDate = new Date();
+      const currentHour = currentDate.getHours();
+      const currentMin = currentDate.getMinutes();
 
+      if (currentHour >= 5 && currentHour < 12) {
+        this.daytime = 'Morgen';
+      } else if (currentHour >= 12 && currentHour < 18) {
+        this.daytime = 'Mittag';
+      } else {
+        this.daytime = 'Abend';
+      }
 
+      const formattedHour = ('0' + currentHour).slice(-2);
+      const formattedMinute = ('0' + currentMin).slice(-2);
 
-setCurrentTime()
-{
-  const currentDate = new Date();
-  const currentHour = currentDate.getHours();
-  const currentMin = currentDate.getMinutes();
+      this.greeting = `${this.daytime}! Es ist ${formattedHour}:${formattedMinute}`;
+    },
 
-  if (currentHour >= 5 && currentHour < 12) {
-    this.daytime = 'Morgen';
-  } else if (currentHour >= 12 && currentHour < 18) {
-    this.daytime = 'Mittag';
-  } else {
-    this.daytime = 'Abend';
-  }
-
-  const formattedHour = ('0' + currentHour).slice(-2);
-  const formattedMinute = ('0' + currentMin).slice(-2);
-
-  this.greeting = `${this.daytime}! Es ist ${formattedHour}:${formattedMinute}`;
-},
     deleteRow(rowId) {
       const row = document.getElementById(rowId);
       row.remove();
 
     },
 
-addRow() {
-  var amount = document.getElementById('amount').value;
-  var liters = parseFloat(amount) ;
+    addRow() {
+      const amount = document.getElementById('amount').value;
+      var liters = parseFloat(getrunken);
 
 
-  const table = document.getElementById("Wasserstand");
-  const row = table.insertRow(-1);
+      const table = document.getElementById("Wasserstand");
+      const row = table.insertRow(-1);
 
-  const rowId = 'row' + (this.rowCounter + 1)
-  row.setAttribute('id',rowId);
+      const rowId = 'row' + (this.rowCounter + 1)
+      row.setAttribute('id', rowId);
 
-  const cell1 = row.insertCell(0);
-  const cell2 = row.insertCell(1);
-  const cell3 = row.insertCell(2);
+      const cell1 = row.insertCell(0);
+      const cell2 = row.insertCell(1);
+      const cell3 = row.insertCell(2);
+      const cell4 = row.insertCell(3);
 
-  const deleteButton = document.createElement('button'); // Create a new button element
-  deleteButton.innerText = 'Delete';
-  deleteButton.classList.add('deletion');
+      const deleteButton = document.createElement('button'); // Create a new button element
+      deleteButton.innerText = 'Delete';
+      deleteButton.classList.add('deletion');
 
-  cell1.innerHTML = this.daytime;
-  cell2.innerHTML = liters.toFixed(1) +  "L";
-  cell3.appendChild(deleteButton)
+      cell1.innerHTML = this.daytime;
+      cell2.innerHTML = amount + "L";
+      cell3.innerHTML = liters.toFixed(1) + "L";
+      cell4.appendChild(deleteButton)
 
-  deleteButton.addEventListener('click', () => {
-    this.deleteRow(rowId);
-  });
-  this.rowCounter++; // Increment the row counter
+      deleteButton.addEventListener('click', () => {
+        this.deleteRow(rowId);
+      });
+      this.rowCounter++; // Increment the row counter
 
-  row.classList.add('rowDesign');
-
-},
-
+      row.classList.add('rowDesign');
 
     },
-invtervall()
-{
-  const targetHour = 17;
 
-  const interval = setInterval(function () {
-    const currentTime = new Date();
-    const currentHour = currentTime.getHours();
+    invtervall() {
+      const targetHour = 17;
 
-    while (currentHour >= targetHour) {
-      clearInterval(interval);
-      changeHTML();
+      const interval = setInterval(function () {
+        const currentTime = new Date();
+        const currentHour = currentTime.getHours();
+
+        while (currentHour >= targetHour) {
+          clearInterval(interval);
+          changeHTML();
+        }
+      }, 1000)
+
+      function changeHTML() {
+        const reminder = document.getElementById("Reminder");
+        reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen !!";
+        const farbeÄndern = document.getElementById("Farbe");
+        farbeÄndern.style.background = "red";
+      }
+    },
+    save(){
+      const endpoint = 'http://localhost:8080/User'
+      const data = {
+        amount: this.amountField,
+        getrunken: this.getrunkenField
+      }
+      const reqOptions = {
+        method: 'POST',
+        headers: {
+          'content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }
+      fetch(endpoint, reqOptions)
+          .then(response => response.json)
+          .then(result => {
+            userId = result
+            console.log('Success', result)
+          })
+          .catch(error => console.log('error', error))
+    },
+    change() {
+      getrunken = this.getrunkenField.value;
+      const endpoint = 'http://localhost:8080/users/' + userId
+      const reqOptions = {
+        method: 'PUT',
+        headers: {
+          'content-Type': 'application/json'
+        },
+        body: JSON.stringify({ variable: getrunken })
+      }
+      fetch(endpoint, reqOptions)
+          .then(response => response.json)
+          .then(result => {
+            getrunken = result
+            console.log(result)
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          })
+    },
+    mounted() {
+      this.setCurrentTime()
+      this.invtervall()
     }
-  }, 1000)
-
-  function changeHTML() {
-    const reminder = document.getElementById("Reminder");
-    reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen !!";
-    const farbeÄndern = document.getElementById("Farbe");
-    farbeÄndern.style.background = "red";
   }
-}
-,
-
-mounted()
-{
-  this.setCurrentTime()
-  this.invtervall()
-
-}
-
-
-
 };
 </script>
 
@@ -332,7 +372,7 @@ position: absolute;
   left: 0;
   width: 100%;
   height: 100px;
-  background: url(../../../Downloads/wave.png);
+/*  background: url(../../../Downloads/wave.png);*/
 background-size: 1000px 100px;
 z-index: 1;
 }
