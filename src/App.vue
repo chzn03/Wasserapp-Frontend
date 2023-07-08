@@ -9,7 +9,7 @@
     <h1 id= "greeting">{{ greeting }}</h1>
 
     <header id = "Navigationsbar">
-      <h1 id="namehead">Drinking Water is fun!</h1>
+      <h1 id="name-head">Drinking Water is fun!</h1>
       <nav>
         <div id = "Reminder">Du hast noch genug Zeit um dein Ziel heute zu erreichen</div>
         <ul>
@@ -28,8 +28,8 @@
       <h1 id ="Tabellenüberschrift">Wasserstand</h1>
       Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount" id="amount"/> <br><br/>
       Wie viel Wasser hast du getrunken ? (in Liter) <input v-model="getrunkenField" type="number" name="getrunken" id="getrunken"/> <br><br/>
-      <button id="adding" type="button" @click="addRow(); save(); change()">Add</button> <br><br/>
-      <table  id = "Wasserstand" border="1">
+      <button id="adding" type="button" @click="addRow(); saveOrChange()">Add</button> <br><br/>
+      <table  id = "Wasserstand">
         <thead>
         <tr>
           <th>Tag, Zeit</th>
@@ -68,8 +68,8 @@
     <section id="Verlauf">
       <h2>Verlauf</h2>
       <p>Hier kannst du deine aktuellen Wasserverbrauchsdaten einsehen und vergleichen.</p>
-      <p>Dein tägliches Ziel: 2 Liter</p>
-      <p id="water-consumption">Wasserverbrauch: <span id="consumption-value">0</span> Liter</p>
+      <p>Dein tägliches Ziel: <span id="Tagesziel"></span> Liter</p>
+      <p id="water-consumption">Wasserverbrauch: <span id="trinken"></span> Liter</p>
     </section>
 
     <footer>
@@ -80,11 +80,9 @@
 
 <script>
 
-let userId = 0;
-let getrunken = document.getElementById('getrunken').value;
+let userId = 1;
+let getrunken = 0;
 export default {
-
-
   data() {
     return {
       greeting: '',
@@ -120,8 +118,12 @@ export default {
     },
 
     addRow() {
+      let resetGetrunken = parseFloat(getrunken);
+      getrunken = parseFloat(getrunken) + parseFloat(document.getElementById('getrunken').value)
       const amount = document.getElementById('amount').value;
-      var liters = parseFloat(getrunken);
+      //var liters = parseFloat(getrunken);
+      document.getElementById('Tagesziel').textContent = amount;
+      document.getElementById('trinken').textContent = getrunken;
 
 
       const table = document.getElementById("Wasserstand");
@@ -141,10 +143,11 @@ export default {
 
       cell1.innerHTML = this.daytime;
       cell2.innerHTML = amount + "L";
-      cell3.innerHTML = liters.toFixed(1) + "L";
+      cell3.innerHTML = getrunken.toFixed(1) + "L";
       cell4.appendChild(deleteButton)
 
       deleteButton.addEventListener('click', () => {
+        getrunken = resetGetrunken;
         this.deleteRow(rowId);
       });
       this.rowCounter++; // Increment the row counter
@@ -169,11 +172,12 @@ export default {
       function changeHTML() {
         const reminder = document.getElementById("Reminder");
         reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen !!";
-        const farbeÄndern = document.getElementById("Farbe");
-        farbeÄndern.style.background = "red";
+        const farbeAendern = document.getElementById("Farbe");
+        farbeAendern.style.background = "red";
       }
     },
     save(){
+      getrunken = document.getElementById('getrunken')
       const endpoint = 'http://localhost:8080/User'
       const data = {
         amount: this.amountField,
@@ -195,8 +199,6 @@ export default {
           .catch(error => console.log('error', error))
     },
     change() {
-      getrunken = this.getrunkenField.value;
-      const endpoint = 'http://localhost:8080/users/' + userId
       const reqOptions = {
         method: 'PUT',
         headers: {
@@ -204,15 +206,22 @@ export default {
         },
         body: JSON.stringify({ variable: getrunken })
       }
-      fetch(endpoint, reqOptions)
+      fetch('http://localhost/users/'+userId, reqOptions)
           .then(response => response.json)
           .then(result => {
-            getrunken = result
             console.log(result)
           })
           .catch(error => {
             console.error('Error:', error);
           })
+    },
+    saveOrChange(){
+      if(userId = 1){
+        this.save();
+      }
+      else{
+        this.change();
+      }
     },
     mounted() {
       this.setCurrentTime()
@@ -238,7 +247,7 @@ body{
 #greeting{
   color : white;
 }
-#namehead{
+#name-head{
   color: #3586ff;
 }
 
@@ -302,7 +311,7 @@ font-style: inherit;
 
 }
 
-#Tabelleüberschrift{
+#Tabellenüberschrift{
   color: white;
 
 }
