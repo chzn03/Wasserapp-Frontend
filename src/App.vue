@@ -28,7 +28,7 @@
       <h1 id ="Tabellenüberschrift">Wasserstand</h1>
       Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount" id="amount"/> <br><br/>
       Wie viel Wasser hast du getrunken ? (in Liter) <input v-model="getrunkenField" type="number" name="getrunken" id="getrunken"/> <br><br/>
-      <button id="adding" type="button" @click="addRow(); saveOrChange()">Add</button> <br><br/>
+      <button id="adding" type="button" @click="addRow()">Add</button> <br><br/>
       <table  id = "Wasserstand">
         <thead>
         <tr>
@@ -38,27 +38,6 @@
           <th></th>
         </tr>
         </thead>
-        <tbody>
-        <tr id="row1" class="rowDesign">
-          <td>{{ "3.07.23, 13 uhr" }}</td>
-          <td>{{"5 Liter"}}</td>
-          <td>{{"0.2 ml"}}</td>
-          <td><button class="deletion" type="button" @click="deleteRow('row1')">Delete</button></td>
-        </tr>
-        <tr id="row2" class="rowDesign">
-          <td>Row2 cell1</td>
-          <td>Row2 cell2</td>
-          <td>Row2 cell3</td>
-          <td><button class="deletion" type="button" @click="deleteRow('row2')">Delete</button></td>
-        </tr>
-        <tr id="row3" class="rowDesign">
-          <td>{{ "4.07.23, 12 uhr" }}</td>
-          <td>{{"2,5 Liter"}}</td>
-          <td>{{"0.2 ml"}}</td>
-        <td><button class="deletion" type="button" @click="deleteRow('row3')">Delete</button></td>
-        </tr>
-
-        </tbody>
       </table>
 
 
@@ -82,6 +61,7 @@
 
 let userId = 1;
 let getrunken = 0;
+let saveCounter= 0;
 export default {
   data() {
     return {
@@ -121,7 +101,7 @@ export default {
       let resetGetrunken = parseFloat(getrunken);
       getrunken = parseFloat(getrunken) + parseFloat(document.getElementById('getrunken').value)
       const amount = document.getElementById('amount').value;
-      //var liters = parseFloat(getrunken);
+      var liters = parseFloat(getrunken);
       document.getElementById('Tagesziel').textContent = amount;
       document.getElementById('trinken').textContent = getrunken;
 
@@ -143,16 +123,25 @@ export default {
 
       cell1.innerHTML = this.daytime;
       cell2.innerHTML = amount + "L";
-      cell3.innerHTML = getrunken.toFixed(1) + "L";
+      cell3.innerHTML = liters.toFixed(1) + "L";
       cell4.appendChild(deleteButton)
 
       deleteButton.addEventListener('click', () => {
         getrunken = resetGetrunken;
+        document.getElementById('trinken').textContent = getrunken;
         this.deleteRow(rowId);
       });
       this.rowCounter++; // Increment the row counter
 
       row.classList.add('rowDesign');
+
+      if(saveCounter === 0){
+        this.save()
+        saveCounter = 14;
+      }
+      else{
+        this.change()
+      }
 
     },
 
@@ -163,7 +152,7 @@ export default {
         const currentTime = new Date();
         const currentHour = currentTime.getHours();
 
-        while (currentHour >= targetHour) {
+        while ((currentHour > targetHour) && (getrunken < (document.getElementById('amount').value - 1))) {
           clearInterval(interval);
           changeHTML();
         }
@@ -172,12 +161,10 @@ export default {
       function changeHTML() {
         const reminder = document.getElementById("Reminder");
         reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen !!";
-        const farbeAendern = document.getElementById("Farbe");
-        farbeAendern.style.background = "red";
+        document.body.style.background = 'red';
       }
     },
     save(){
-      getrunken = document.getElementById('getrunken')
       const endpoint = 'http://localhost:8080/User'
       const data = {
         amount: this.amountField,
@@ -192,11 +179,12 @@ export default {
       }
       fetch(endpoint, reqOptions)
           .then(response => response.json)
-          .then(result => {
-            userId = result
-            console.log('Success', result)
+          .then(data => {
+            userId = parseFloat(data);
+            console.log('Success', userId)
           })
           .catch(error => console.log('error', error))
+      document.getElementById('variabel').innerHTML=userId;
     },
     change() {
       const reqOptions = {
@@ -214,14 +202,6 @@ export default {
           .catch(error => {
             console.error('Error:', error);
           })
-    },
-    saveOrChange(){
-      if(userId = 1){
-        this.save();
-      }
-      else{
-        this.change();
-      }
     },
     mounted() {
       this.setCurrentTime()
@@ -371,7 +351,7 @@ table th {
   position: absolute;
   width: 100%;
   height: 100vh;
-  background: #3586ff;
+  background: cornflowerblue;
   overflow: hidden;
   z-index: -1;
 }
