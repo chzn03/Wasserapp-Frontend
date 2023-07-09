@@ -1,17 +1,17 @@
 <template>
-  <section id= "background">
-    <div class = "wave wave1"></div>
-    <div class = "wave wave2"></div>
-    <div class = "wave wave3"></div>
+  <section id="background">
+    <div className="wave wave1"></div>
+    <div className="wave wave2"></div>
+    <div className="wave wave3"></div>
   </section>
 
   <div id="app">
-    <h1 id= "greeting">{{ greeting }}</h1>
+    <h1 id="greeting">{{ greeting }}</h1>
 
-    <header id = "Navigationsbar">
+    <header id="Navigationsbar">
       <h1 id="name-head">Drinking Water is fun!</h1>
       <nav>
-        <div id = "Reminder">Du hast noch genug Zeit um dein Ziel heute zu erreichen</div>
+        <div id="Reminder">Du hast noch genug Zeit um dein Ziel heute zu erreichen</div>
         <ul>
           <li><a href="#">Home</a></li>
           <li><a href="#">Verlauf</a></li>
@@ -25,11 +25,14 @@
     </section>
 
     <main>
-      <h1 id ="Tabellenüberschrift">Wasserstand</h1>
-      Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount" id="amount"/> <br><br/>
-      Wie viel Wasser hast du getrunken ? (in Liter) <input v-model="getrunkenField" type="number" name="getrunken" id="getrunken"/> <br><br/>
-      <button id="adding" type="button" @click="addRow()">Add</button> <br><br/>
-      <table  id = "Wasserstand">
+      <h1 id="Tabellenüberschrift">Wasserstand</h1>
+      Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount"
+                                                                   id="amount"/> <br><br/>
+      Wie viel Wasser hast du getrunken ? (in Liter) <input v-model="getrunkenField" type="number" name="getrunken"
+                                                            id="getrunken"/> <br><br/>
+      <button id="adding" type="button" @click="addRow()">Add</button>
+      <br><br/>
+      <table id="Wasserstand">
         <thead>
         <tr>
           <th>Tag, Zeit</th>
@@ -39,7 +42,6 @@
         </tr>
         </thead>
       </table>
-
 
 
     </main>
@@ -61,7 +63,7 @@
 
 let userId = 1;
 let getrunken = 0;
-let saveCounter= 0;
+let saveCounter = 0;
 export default {
   data() {
     return {
@@ -98,6 +100,17 @@ export default {
     },
 
     addRow() {
+      const currentDate = new Date();
+      const currentHour = currentDate.getHours();
+
+      if (currentHour >= 5 && currentHour < 12) {
+        this.daytime = 'Morgen';
+      } else if (currentHour >= 12 && currentHour < 18) {
+        this.daytime = 'Mittag';
+      } else {
+        this.daytime = 'Abend';
+      }
+
       let resetGetrunken = parseFloat(getrunken);
       getrunken = parseFloat(getrunken) + parseFloat(document.getElementById('getrunken').value)
       const amount = document.getElementById('amount').value;
@@ -129,17 +142,18 @@ export default {
       deleteButton.addEventListener('click', () => {
         getrunken = resetGetrunken;
         document.getElementById('trinken').textContent = getrunken;
+        liters = parseFloat(getrunken);
+        cell3.innerHtML = liters.toFixed(1) + "L";
         this.deleteRow(rowId);
       });
       this.rowCounter++; // Increment the row counter
 
       row.classList.add('rowDesign');
 
-      if(saveCounter === 0){
+      if (saveCounter === 0) {
         this.save()
         saveCounter = 14;
-      }
-      else{
+      } else {
         this.change()
       }
 
@@ -164,7 +178,7 @@ export default {
         document.body.style.background = 'red';
       }
     },
-    save(){
+    save() {
       const endpoint = 'http://localhost:8080/User'
       const data = {
         amount: this.amountField,
@@ -184,7 +198,6 @@ export default {
             console.log('Success', userId)
           })
           .catch(error => console.log('error', error))
-      document.getElementById('variabel').innerHTML=userId;
     },
     change() {
       const reqOptions = {
@@ -192,9 +205,9 @@ export default {
         headers: {
           'content-Type': 'application/json'
         },
-        body: JSON.stringify({ variable: getrunken })
+        body: JSON.stringify({variable: parseInt(getrunken)})
       }
-      fetch('http://localhost/users/'+userId, reqOptions)
+      fetch('http://localhost/users/' + userId, reqOptions)
           .then(response => response.json)
           .then(result => {
             console.log(result)
@@ -211,7 +224,7 @@ export default {
 };
 </script>
 
-<style >
+<style>
 * {
   padding: 1px;
   margin: 1px;
@@ -220,14 +233,16 @@ export default {
   box-sizing: border-box;
 }
 
-body{
+body {
   font-family: Montserrat;
   background-color: black;
 }
-#greeting{
-  color : white;
+
+#greeting {
+  color: white;
 }
-#name-head{
+
+#name-head {
   color: #3586ff;
 }
 
@@ -247,9 +262,9 @@ label {
   margin: 5px;
 }
 
-#Reminder{
-  color : white;
-  font-size : 20px;
+#Reminder {
+  color: white;
+  font-size: 20px;
 }
 
 nav ul {
@@ -266,35 +281,39 @@ nav ul li a {
   font-size: 17px;
   text-transform: uppercase;
 }
+
 header {
   background-color: white;
   text-align: center;
   padding: 20px;
   margin: 50px;
 }
-#intro{
+
+#intro {
   color: #dddddd;
   font-size: 20px;
-  font-style: italic ;
+  font-style: italic;
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
 
 }
 
-#Verlauf{
+#Verlauf {
   color: #dddddd;
-margin: 20px;
+  margin: 20px;
 }
+
 #Verlauf h2 {
-font-style: inherit;
+  font-style: inherit;
 
 }
 
-#Tabellenüberschrift{
+#Tabellenüberschrift {
   color: white;
 
 }
+
 table {
   padding-top: -10px;
   width: 100%;
@@ -313,13 +332,13 @@ table th {
   background-color: cornflowerblue;
 }
 
- .rowDesign{
+.rowDesign {
   background-color: whitesmoke;
-   font-size: larger;
+  font-size: larger;
 }
 
 
-#adding{
+#adding {
   text-align: center;
   float: left;
   display: inline-block;
@@ -332,7 +351,8 @@ table th {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-.deletion{
+
+.deletion {
   text-align: center;
   float: right;
   display: inline-block;
@@ -347,7 +367,7 @@ table th {
 }
 
 
-#background{
+#background {
   position: absolute;
   width: 100%;
   height: 100vh;
@@ -355,17 +375,19 @@ table th {
   overflow: hidden;
   z-index: -1;
 }
-section.wave{
-position: absolute;
+
+section.wave {
+  position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 100px;
-/*  background: url(../../../Downloads/wave.png);*/
-background-size: 1000px 100px;
-z-index: 1;
+  /*  background: url(../../../Downloads/wave.png);*/
+  background-size: 1000px 100px;
+  z-index: 1;
 }
-section .wave.wave1{
+
+section .wave.wave1 {
   animation: animate 30s linear infinite;
 }
 
