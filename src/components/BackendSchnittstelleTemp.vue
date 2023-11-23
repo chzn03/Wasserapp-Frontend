@@ -102,6 +102,7 @@ export default {
     addRow() {
       const currentDate = new Date();
       const currentHour = currentDate.getHours();
+      const targetHour = 12;
 
       if (currentHour >= 5 && currentHour < 12) {
         this.daytime = 'Morgen';
@@ -109,6 +110,20 @@ export default {
         this.daytime = 'Mittag';
       } else {
         this.daytime = 'Abend';
+      }
+      const interval = setInterval(function () {
+        const actualTime = new Date();
+        const actualHour = actualTime.getHours();
+
+        while ((actualHour > targetHour) && (getrunken < (document.getElementById('amount').value - 1))) {
+          clearInterval(interval);
+          changeHTML();
+        }
+      }, 1000)
+      function changeHTML() {
+        const reminder = document.getElementById("Reminder");
+        reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen !!";
+        document.body.style.background = 'red';
       }
 
       let resetGetrunken = parseFloat(getrunken);
@@ -158,26 +173,6 @@ export default {
       }
 
     },
-
-    invtervall() {
-      const targetHour = 17;
-
-      const interval = setInterval(function () {
-        const currentTime = new Date();
-        const currentHour = currentTime.getHours();
-
-        while ((currentHour > targetHour) && (getrunken < (document.getElementById('amount').value - 1))) {
-          clearInterval(interval);
-          changeHTML();
-        }
-      }, 1000)
-
-      function changeHTML() {
-        const reminder = document.getElementById("Reminder");
-        reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen !!";
-        document.body.style.background = 'red';
-      }
-    },
     save() {
       const endpoint = 'http://localhost:8080/User'
       const data = {
@@ -216,10 +211,18 @@ export default {
             console.error('Error:', error);
           })
     },
-    mounted() {
-      this.setCurrentTime()
-      this.invtervall()
+
+    async setup () {
+      if (this.$root.authenticated) {
+        this.claims = await this.$auth.getUser()
+        // this.accessToken = await this.$auth.getAccessToken()
+      }
     }
+  },
+  async created () {
+    await this.setup()
+  },
+  mounted() {
   }
 };
 </script>

@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import { LoginCallback } from '@okta/okta-vue'
 import { navigationGuard } from '@okta/okta-vue'
-import Login from "@/views/Login.vue";
-import Profile from "@/views/Profile.vue";
+import LoginView from "@/views/Login.vue";
+import ProfileView from "@/views/Profile.vue";
 
 const routes = [
   {
@@ -22,7 +22,7 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: Login
+    component: LoginView
   },
   {
     path: '/login/callback',
@@ -30,7 +30,7 @@ const routes = [
   },
   {
     path: '/profile',
-    component: Profile,
+    component: ProfileView,
     meta: {
       requiresAuth: true
     }

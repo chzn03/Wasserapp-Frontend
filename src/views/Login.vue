@@ -6,10 +6,10 @@
 
 <script>
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css'
-import OktaSignIn from '@okta/okta-signin-widget'
+import { oktaSignIn } from '@/okta/config'
 
 export default {
-  name: 'Login',
+  name: 'LoginView',
   mounted: function () {
     this.$nextTick(function () {
       oktaSignIn.showSignInAndRedirect(
