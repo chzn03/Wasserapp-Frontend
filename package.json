@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@okta/okta-auth-js": "^7.4.3",
-    "@okta/okta-signin-widget": "^7.12.1",
+    "@okta/okta-signin-widget": "^7.12.2",
     "@okta/okta-vue": "^5.7.0",
     "bootstrap": "^5.3.2",
     "core-js": "^3.8.3",

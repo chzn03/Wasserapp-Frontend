@@ -51,6 +51,7 @@
       <p>Hier kannst du deine aktuellen Wasserverbrauchsdaten einsehen und vergleichen.</p>
       <p>Dein tägliches Ziel: <span id="Tagesziel"></span> Liter</p>
       <p id="water-consumption">Wasserverbrauch: <span id="trinken"></span> Liter</p>
+      <p>Wie viel fehlt dir noch zum Ziel:<span id="Differenz"></span> Liter </p>
     </section>
 
     <footer>
@@ -100,6 +101,7 @@ export default {
     },
 
     addRow() {
+
       const currentDate = new Date();
       const currentHour = currentDate.getHours();
       const targetHour = 12;
@@ -129,9 +131,15 @@ export default {
       let resetGetrunken = parseFloat(getrunken);
       getrunken = parseFloat(getrunken) + parseFloat(document.getElementById('getrunken').value)
       const amount = document.getElementById('amount').value;
+      const differenz = (amount - getrunken).toString();
       var liters = parseFloat(getrunken);
       document.getElementById('Tagesziel').textContent = amount;
       document.getElementById('trinken').textContent = getrunken;
+      document.getElementById('Differenz').textContent = differenz;
+
+
+
+
 
 
       const table = document.getElementById("Wasserstand");
@@ -172,7 +180,33 @@ export default {
         this.change()
       }
 
-    },
+
+      // lässt den Nutzer wissen, dass sein tägliches Ziel erreicht wurde
+      if (getrunken === parseFloat(document.getElementById('amount').value)) {
+        // Stop further additions
+        console.log('Amount reached. No more data will be added to the table.');
+
+        // Request permission for notifications
+        if (Notification.permission === 'granted') {
+          showNotification();
+        } else if (Notification.permission !== 'denied') {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              showNotification();
+            }
+          });
+        }
+      } else {
+        console.log('Data not added to the table.');
+      }
+
+      function showNotification() {
+        // Display a notification to the user
+        new Notification('Wasserziel erreicht!', {
+          body: 'Du hast dein tägliches Wasserziel erreicht.',
+        });
+      }
+      },
     save() {
       const endpoint = 'http://localhost:8080/User'
       const data = {
@@ -215,7 +249,6 @@ export default {
     async setup () {
       if (this.$root.authenticated) {
         this.claims = await this.$auth.getUser()
-        // this.accessToken = await this.$auth.getAccessToken()
       }
     }
   },
