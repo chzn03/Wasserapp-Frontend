@@ -32,6 +32,14 @@
                                                             id="getrunken"/> <br><br/>
       <button id="adding" type="button" @click="addRow()">Add</button>
       <br><br/>
+
+
+      <div class="notification">
+        <span class="badge" onclick="this.parentElement.style.display='none';">&times;</span>
+        Du hast heute noch nicht genug Wasser getrunken
+      </div>
+
+
       <table id="Wasserstand">
         <thead>
         <tr>
@@ -261,7 +269,7 @@ export default {
 </script>
 
 <style>
-* {
+*{
   padding: 1px;
   margin: 1px;
   text-decoration: none;
@@ -301,6 +309,29 @@ label {
 #Reminder {
   color: white;
   font-size: 20px;
+}
+.notification {
+  background-color: #555;
+  color: white;
+  text-decoration: none;
+  padding: 15px 26px;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.notification:hover {
+  background: red;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
 }
 
 nav ul {
