@@ -8,21 +8,20 @@
   <div id="app">
     <h1 id="greeting">{{ greeting }}</h1>
 
-    <header id="Navigationsbar">
-      <h1 id="name-head">Drinking Water is fun!</h1>
-      <nav>
-        <div id="Reminder">Du hast noch genug Zeit um dein Ziel heute zu erreichen</div>
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Verlauf</a></li>
-        </ul>
-      </nav>
-    </header>
-
     <section id="intro">
       <h2>Willkommen bei Drinking Water is fun!</h2>
       <p>Mit dieser App kannst du deinen Wasserverbrauch verfolgen. Starte jetzt!!</p>
     </section>
+
+    <header id="Navigationsbar">
+
+      <nav>
+        <div id="Reminder">Du hast noch genug Zeit um dein Ziel heute zu erreichen</div>
+      </nav>
+
+    </header>
+
+
 
     <main>
       <h1 id="Tabellenüberschrift">Wasserstand</h1>
@@ -110,6 +109,13 @@ export default {
 
     addRow() {
 
+      try {
+
+      if (!this.amountField || !this.getrunkenField) {
+        alert('Please fill in both fields.');
+        return;
+      }
+
       const currentDate = new Date();
       const currentHour = currentDate.getHours();
       const targetHour = 12;
@@ -140,10 +146,25 @@ export default {
       getrunken = parseFloat(getrunken) + parseFloat(document.getElementById('getrunken').value)
       const amount = document.getElementById('amount').value;
       const differenz = (amount - getrunken).toString();
+
+
       var liters = parseFloat(getrunken);
       document.getElementById('Tagesziel').textContent = amount;
       document.getElementById('trinken').textContent = getrunken;
       document.getElementById('Differenz').textContent = differenz;
+
+      const notificationText = differenz > 0
+          ? `Du hast heute noch ${differenz} Liter Wasser zu trinken, um dein Ziel zu erreichen.`
+          : "Du hast dein tägliches Wasserziel erreicht!";
+
+      const notification = document.querySelector('.notification');
+      notification.innerHTML = `<span class="badge" onclick="this.parentElement.style.display='none';">&times;</span>${notificationText}`;
+
+      if (differenz > 0) {
+        notification.style.backgroundColor = 'red'; // Optional: Set color for reminder
+      } else {
+        notification.style.backgroundColor = 'green'; // Optional: Set color for goal achieved
+      }
 
 
 
@@ -188,32 +209,14 @@ export default {
         this.change()
       }
 
-
-      // lässt den Nutzer wissen, dass sein tägliches Ziel erreicht wurde
-      if (getrunken === parseFloat(document.getElementById('amount').value)) {
-        // Stop further additions
-        console.log('Amount reached. No more data will be added to the table.');
-
-        // Request permission for notifications
-        if (Notification.permission === 'granted') {
-          showNotification();
-        } else if (Notification.permission !== 'denied') {
-          Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-              showNotification();
-            }
-          });
-        }
-      } else {
-        console.log('Data not added to the table.');
+      } catch (error) {
+        console.error('Starte die Webseite neu:', error);
+        // Handle the error appropriately (e.g., show an error message to the user)
+      } finally {
+        // Enable the button regardless of success or failure
+        document.getElementById('adding').disabled = false;
       }
 
-      function showNotification() {
-        // Display a notification to the user
-        new Notification('Wasserziel erreicht!', {
-          body: 'Du hast dein tägliches Wasserziel erreicht.',
-        });
-      }
       },
     save() {
       const endpoint = 'http://localhost:8080/User'
@@ -286,23 +289,12 @@ body {
   color: white;
 }
 
-#name-head {
-  color: #3586ff;
-}
+
 
 nav {
   background: cornflowerblue;
-  height: 80px;
+  height: 40px;
   width: 100%;
-  margin: 5px;
-}
-
-label {
-  color: white;
-  font-size: 35px;
-  line-height: 80px;
-  padding: 0 100px;
-  font-weight: bold;
   margin: 5px;
 }
 
@@ -357,7 +349,7 @@ header {
 }
 
 #intro {
-  color: #dddddd;
+  color: whitesmoke;
   font-size: 20px;
   font-style: italic;
   text-align: center;
@@ -396,7 +388,7 @@ table th, table td {
 }
 
 table th {
-  background-color: cornflowerblue;
+  background-color: white;
 }
 
 .rowDesign {
@@ -437,25 +429,12 @@ table th {
 #background {
   position: absolute;
   width: 100%;
-  height: 100vh;
+  height: 200vh;
   background: cornflowerblue;
   overflow: hidden;
   z-index: -1;
 }
 
-section.wave {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100px;
-  /*  background: url(../../../Downloads/wave.png);*/
-  background-size: 1000px 100px;
-  z-index: 1;
-}
 
-section .wave.wave1 {
-  animation: animate 30s linear infinite;
-}
 
 </style>
