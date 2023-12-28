@@ -22,7 +22,6 @@
     </header>
 
 
-
     <main>
       <h1 id="Tabellenüberschrift">Wasserstand</h1>
       Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount"
@@ -33,8 +32,8 @@
       <br><br/>
 
 
-      <div class="notification">
-        <span class="badge" onclick="this.parentElement.style.display='none';">&times;</span>
+      <div className="notification">
+        <span className="badge" onClick="this.parentElement.style.display='none';"></span>
         Du hast heute noch nicht genug Wasser getrunken
       </div>
 
@@ -58,7 +57,7 @@
       <p>Hier kannst du deine aktuellen Wasserverbrauchsdaten einsehen und vergleichen.</p>
       <p>Dein tägliches Ziel: <span id="Tagesziel"></span> Liter</p>
       <p id="water-consumption">Wasserverbrauch: <span id="trinken"></span> Liter</p>
-      <p>Wie viel fehlt dir noch zum Ziel:<span id="Differenz"></span> Liter </p>
+
     </section>
 
     <footer>
@@ -106,108 +105,140 @@ export default {
       row.remove();
 
     },
+    updateTimer() {
+      const currentDate = new Date();
+      const midnight = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() + 1, // Morgen um Mitternacht
+          0, // Stunden
+          0, // Minuten
+          0 // Sekunden
+      );
+
+      const timeDifference = midnight - currentDate;
+      const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+      const timerText = `Du hast noch  ${hours}:${minutes}:${seconds} `+` um dein Ziel zu erreichen`;
+      document.getElementById('Reminder').innerText = timerText;
+
+      if (timeDifference <= 0) {
+        // Countdown erreicht, handle entsprechend
+        clearInterval(this.countdownInterval);
+        document.getElementById('Reminder').innerText = "Mitternacht ist erreicht!";
+      }
+
+    },
 
     addRow() {
 
       try {
 
-      if (!this.amountField || !this.getrunkenField) {
-        alert('Please fill in both fields.');
-        return;
-      }
-
-      const currentDate = new Date();
-      const currentHour = currentDate.getHours();
-      const targetHour = 12;
-
-      if (currentHour >= 5 && currentHour < 12) {
-        this.daytime = 'Morgen';
-      } else if (currentHour >= 12 && currentHour < 18) {
-        this.daytime = 'Mittag';
-      } else {
-        this.daytime = 'Abend';
-      }
-      const interval = setInterval(function () {
-        const actualTime = new Date();
-        const actualHour = actualTime.getHours();
-
-        while ((actualHour > targetHour) && (getrunken < (document.getElementById('amount').value - 1))) {
-          clearInterval(interval);
-          changeHTML();
+        if (!this.amountField || !this.getrunkenField) {
+          alert('Please fill in both fields.');
+          return;
         }
-      }, 1000)
-      function changeHTML() {
-        const reminder = document.getElementById("Reminder");
-        reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen !!";
-        document.body.style.background = 'red';
-      }
 
-      let resetGetrunken = parseFloat(getrunken);
-      getrunken = parseFloat(getrunken) + parseFloat(document.getElementById('getrunken').value)
-      const amount = document.getElementById('amount').value;
-      const differenz = (amount - getrunken).toString();
+        const currentDate = new Date();
+        const currentHour = currentDate.getHours();
+        const targetHour = 12;
 
+        if (currentHour >= 5 && currentHour < 12) {
+          this.daytime = 'Morgen';
+        } else if (currentHour >= 12 && currentHour < 18) {
+          this.daytime = 'Mittag';
+        } else {
+          this.daytime = 'Abend';
+        }
+        const interval = setInterval(function () {
+          const actualTime = new Date();
+          const actualHour = actualTime.getHours();
 
-      var liters = parseFloat(getrunken);
-      document.getElementById('Tagesziel').textContent = amount;
-      document.getElementById('trinken').textContent = getrunken;
-      document.getElementById('Differenz').textContent = differenz;
+          while ((actualHour > targetHour) && (getrunken < (document.getElementById('amount').value - 1))) {
+            clearInterval(interval);
+            changeHTML();
+          }
+        }, 1000)
 
-      const notificationText = differenz > 0
-          ? `Du hast heute noch ${differenz} Liter Wasser zu trinken, um dein Ziel zu erreichen.`
-          : "Du hast dein tägliches Wasserziel erreicht!";
+        function changeHTML() {
+          const reminder = document.getElementById("Reminder");
+          reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen !!";
+          document.body.style.background = 'red';
+        }
 
-      const notification = document.querySelector('.notification');
-      notification.innerHTML = `<span class="badge" onclick="this.parentElement.style.display='none';">&times;</span>${notificationText}`;
-
-      if (differenz > 0) {
-        notification.style.backgroundColor = 'red'; // Optional: Set color for reminder
-      } else {
-        notification.style.backgroundColor = 'green'; // Optional: Set color for goal achieved
-      }
-
-
-
-
+        let resetGetrunken = parseFloat(getrunken);
+        getrunken = parseFloat(getrunken) + parseFloat(document.getElementById('getrunken').value)
+        const amount = document.getElementById('amount').value;
+        const differenz = (amount - getrunken).toString();
 
 
-      const table = document.getElementById("Wasserstand");
-      const row = table.insertRow(-1);
-
-      const rowId = 'row' + (this.rowCounter + 1)
-      row.setAttribute('id', rowId);
-
-      const cell1 = row.insertCell(0);
-      const cell2 = row.insertCell(1);
-      const cell3 = row.insertCell(2);
-      const cell4 = row.insertCell(3);
-
-      const deleteButton = document.createElement('button'); // Create a new button element
-      deleteButton.innerText = 'Delete';
-      deleteButton.classList.add('deletion');
-
-      cell1.innerHTML = this.daytime;
-      cell2.innerHTML = amount + "L";
-      cell3.innerHTML = liters.toFixed(1) + "L";
-      cell4.appendChild(deleteButton)
-
-      deleteButton.addEventListener('click', () => {
-        getrunken = resetGetrunken;
+        var liters = parseFloat(getrunken);
+        document.getElementById('Tagesziel').textContent = amount;
         document.getElementById('trinken').textContent = getrunken;
-        liters = parseFloat(getrunken);
-        cell3.innerHtML = liters.toFixed(1) + "L";
-        this.deleteRow(rowId);
-      });
-      this.rowCounter++; // Increment the row counter
 
-      row.classList.add('rowDesign');
 
-      if (saveCounter === 0) {
-        this.save()
-        saveCounter = 14;
-      } else {
-        this.change()
-      }
+        const notificationText = differenz > 0
+            ? `Du hast heute noch ${differenz} Liter Wasser zu trinken, um dein Ziel zu erreichen.`
+            : "Du hast dein tägliches Wasserziel erreicht!";
+
+        const notification = document.querySelector('.notification');
+        notification.innerHTML = `<span class="badge" onclick="this.parentElement.style.display='none';"></span>${notificationText}`;
+
+        if (differenz > 0) {
+          notification.style.backgroundColor = 'red'; // Optional: Set color for reminder
+        } else {
+          notification.style.backgroundColor = 'green'; // Optional: Set color for goal achieved
+        }
+
+        this.updateTimer();
+
+        // Set an interval to update the timer every second
+        const timerInterval = setInterval(() => {
+          this.updateTimer();
+        }, 1000);
+
+
+        const table = document.getElementById("Wasserstand");
+        const row = table.insertRow(-1);
+
+        const rowId = 'row' + (this.rowCounter + 1)
+        row.setAttribute('id', rowId);
+
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+        const cell3 = row.insertCell(2);
+        const cell4 = row.insertCell(3);
+
+        const deleteButton = document.createElement('button'); // Create a new button element
+        deleteButton.innerText = 'Delete';
+        deleteButton.classList.add('deletion');
+
+        cell1.innerHTML = this.daytime;
+        cell2.innerHTML = amount + "L";
+        cell3.innerHTML = liters.toFixed(1) + "L";
+        cell4.appendChild(deleteButton)
+
+        deleteButton.addEventListener('click', () => {
+          getrunken = resetGetrunken;
+          document.getElementById('trinken').textContent = getrunken;
+          liters = parseFloat(getrunken);
+          cell3.innerHtML = liters.toFixed(1) + "L";
+          this.deleteRow(rowId);
+        });
+        this.rowCounter++; // Increment the row counter
+
+        row.classList.add('rowDesign');
+
+        if (saveCounter === 0) {
+          this.save()
+          saveCounter = 14;
+        } else {
+          this.change()
+        }
+
+
 
       } catch (error) {
         console.error('Starte die Webseite neu:', error);
@@ -217,7 +248,8 @@ export default {
         document.getElementById('adding').disabled = false;
       }
 
-      },
+
+    },
     save() {
       const endpoint = 'http://localhost:8080/User'
       const data = {
@@ -257,13 +289,13 @@ export default {
           })
     },
 
-    async setup () {
+    async setup() {
       if (this.$root.authenticated) {
         this.claims = await this.$auth.getUser()
       }
     }
   },
-  async created () {
+  async created() {
     await this.setup()
   },
   mounted() {
@@ -272,7 +304,7 @@ export default {
 </script>
 
 <style>
-*{
+* {
   padding: 1px;
   margin: 1px;
   text-decoration: none;
@@ -290,7 +322,6 @@ body {
 }
 
 
-
 nav {
   background: cornflowerblue;
   height: 40px;
@@ -302,6 +333,7 @@ nav {
   color: white;
   font-size: 20px;
 }
+
 .notification {
   background-color: #555;
   color: white;
@@ -434,7 +466,6 @@ table th {
   overflow: hidden;
   z-index: -1;
 }
-
 
 
 </style>
