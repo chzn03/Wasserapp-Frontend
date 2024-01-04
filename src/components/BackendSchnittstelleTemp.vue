@@ -1,9 +1,10 @@
 <template>
   <section id="background">
-    <div className="wave wave1"></div>
-    <div className="wave wave2"></div>
-    <div className="wave wave3"></div>
   </section>
+
+  <div  >
+
+  </div>
 
   <div id="app">
     <h1 id="greeting">{{ greeting }}</h1>
@@ -24,12 +25,23 @@
 
     <main>
       <h1 id="Tabellenüberschrift">Wasserstand</h1>
+
+      <div>
+      <div class="input-container">
+      Körpergewicht (in kg) <input v-model="weight" type="number" name="weight" id="weight"/><br><br/>  <button id="calculate" @click="calculateWeight">Calculate</button>
+      </div>
+
       Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount"
                                                                    id="amount"/> <br><br/>
       Wie viel Wasser hast du getrunken ? (in Liter) <input v-model="getrunkenField" type="number" name="getrunken"
                                                             id="getrunken"/> <br><br/>
       <button id="adding" type="button" @click="addRow()">Add</button>
       <br><br/>
+
+        <div v-if="result !== null">
+          <p>Dein Bedarf liegt bei: {{ result }} L</p>
+        </div>
+      </div>
 
 
       <div className="notification">
@@ -61,7 +73,7 @@
     </section>
 
     <footer>
-      <p>&copy; 2023 Wasser-App. Alle Rechte vorbehalten.</p>
+      <p>&copy; 2024 Wasser-App. Alle Rechte vorbehalten.</p>
     </footer>
   </div>
 </template>
@@ -71,13 +83,16 @@
 let userId = 1;
 let getrunken = 0;
 let saveCounter = 0;
+let result = 0;
 export default {
   data() {
     return {
       greeting: '',
       daytime: '',
       getrunkenField: '',
-      amountField: ''
+      amountField: '',
+      weight: '',
+      result: null,
     };
   },
   methods: {
@@ -100,11 +115,15 @@ export default {
       this.greeting = `${this.daytime}! Es ist ${formattedHour}:${formattedMinute}`;
     },
 
+
     deleteRow(rowId) {
       const row = document.getElementById(rowId);
       row.remove();
 
     },
+
+
+
     updateTimer() {
       const currentDate = new Date();
       const midnight = new Date(
@@ -131,6 +150,19 @@ export default {
       }
 
     },
+
+    calculateWeight(){
+      if (this.weight !== null && !isNaN(this.weight)) {
+        this.result = this.weight * 30/1000;
+      }
+
+      else {
+        alert('Please enter a valid weight.');
+      }
+      this.checker()
+
+    },
+
 
     addRow() {
 
@@ -247,6 +279,18 @@ export default {
         // Enable the button regardless of success or failure
         document.getElementById('adding').disabled = false;
       }
+
+
+    },
+
+    checker(){
+       var option = confirm('Willst du deinen vorgeschlagenen Bedarfswert ('+this.result+ 'L) als Ziel nutzen ?' );
+        if(option == true){
+        this.amountField = this.result.toFixed(2);
+        }
+       if(option == false){
+         event.preventDefault();
+       }
 
 
     },
@@ -443,6 +487,20 @@ table th {
   transition: background-color 0.3s ease;
 }
 
+#calculate {
+  text-align: center;
+  float: left;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: white;
+  color: cornflowerblue;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
 .deletion {
   text-align: center;
   float: right;
@@ -465,6 +523,11 @@ table th {
   background: cornflowerblue;
   overflow: hidden;
   z-index: -1;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
 }
 
 
