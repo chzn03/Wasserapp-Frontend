@@ -5,23 +5,26 @@
 </template>
 
 <script>
-import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css'
-import { oktaSignIn } from '@/okta/config'
+//import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css'
+
+//import { oktaSignIn } from '@/main'
+//import { onMounted, onUnmounted, nextTick } from 'vue'
 
 export default {
-  name: 'LoginView',
-  mounted: function () {
-    this.$nextTick(function () {
-      oktaSignIn.showSignInAndRedirect(
-          { el: '#okta-signin-container' }
-      )
-    })
-  },
-  unmounted () {
-    // Remove the widget from the DOM on path change
-    oktaSignIn.remove()
-  }
+  name: 'LoginView'
 }
+/*
+onMounted(() => {
+  nextTick(() => {
+    oktaSignIn.showSignInAndRedirect(
+        { el: '#okta-signin-container' },
+    )
+  })
+})
+onUnmounted(() => {
+  oktaSignIn.remove()
+})
+*/
 </script>
 
 <style scoped>

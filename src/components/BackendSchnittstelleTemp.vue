@@ -80,9 +80,8 @@
 
 <script>
 
-let userId = 1;
+let wasserId;
 let getrunken = 0;
-let saveCounter = 0;
 let result = 0;
 export default {
   data() {
@@ -263,14 +262,7 @@ export default {
 
         row.classList.add('rowDesign');
 
-        if (saveCounter === 0) {
-          this.save()
-          saveCounter = 14;
-        } else {
-          this.change()
-        }
-
-
+        this.save()
 
       } catch (error) {
         console.error('Starte die Webseite neu:', error);
@@ -285,19 +277,21 @@ export default {
 
     checker(){
        var option = confirm('Willst du deinen vorgeschlagenen Bedarfswert ('+this.result+ 'L) als Ziel nutzen ?' );
-        if(option == true){
+        if(option === true){
         this.amountField = this.result.toFixed(2);
         }
-       if(option == false){
+       if(option === false){
          event.preventDefault();
        }
 
 
     },
     save() {
-      const endpoint = 'http://localhost:8080/User'
+      const endpoint = 'http://localhost:8080/Wasser'
       const data = {
-        amount: this.amountField,
+        //owner: this.claims.email,
+        date: new Date().getDate(),
+        tagesziel: this.amountField,
         getrunken: this.getrunkenField
       }
       const reqOptions = {
@@ -310,20 +304,26 @@ export default {
       fetch(endpoint, reqOptions)
           .then(response => response.json)
           .then(data => {
-            userId = parseFloat(data);
-            console.log('Success', userId)
+            wasserId = data.Id;
+            console.log('Success ', wasserId)
           })
           .catch(error => console.log('error', error))
     },
+    /*
     change() {
+      const data = {
+        //owner: this.claims.email,
+        tagesziel: this.amountField,
+        getrunken: this.getrunkenField
+      }
       const reqOptions = {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'content-Type': 'application/json'
         },
-        body: JSON.stringify({variable: parseInt(getrunken)})
+        body: JSON.stringify(data)
       }
-      fetch('http://localhost/users/' + userId, reqOptions)
+      fetch('http://localhost/update', reqOptions)
           .then(response => response.json)
           .then(result => {
             console.log(result)
@@ -332,6 +332,7 @@ export default {
             console.error('Error:', error);
           })
     },
+    */
 
     async setup() {
       if (this.$root.authenticated) {

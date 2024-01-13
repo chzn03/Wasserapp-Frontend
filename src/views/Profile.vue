@@ -22,6 +22,9 @@
 </template>
 
 <script>
+//import { useAuth } from '@okta/okta-vue'
+
+//const $auth = useAuth()
 export default {
   name: 'ProfileView',
   data () {
@@ -29,8 +32,10 @@ export default {
       claims: []
     }
   },
+  /*
   async created () {
-    this.claims = await Object.entries(await this.$auth.getUser()).map(entry => ({ claim: entry[0], value: entry[1] }))
+    this.claims = Object.entries(await $auth.getUser()).map(entry => ({claim: entry[0], value: entry[1]}))
   }
+  */
 }
 </script>
