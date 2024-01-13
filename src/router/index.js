@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import SignIn from "@/components/SignIn.vue";
 //import { LoginCallback } from '@okta/okta-vue'
 //import { navigationGuard } from '@okta/okta-vue'
 //import LoginView from "@/views/Login.vue";
@@ -37,10 +38,15 @@ const routes = [
     }
   }
    */
+  {
+    path: '/signIn',
+    name: 'signIn',
+    component: SignIn
+  }
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(process.env.Base_URL),
   routes
 })
 
