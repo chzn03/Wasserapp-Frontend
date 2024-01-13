@@ -27,16 +27,16 @@
       <h1 id="Tabellenüberschrift">Wasserstand</h1>
 
       <div>
-      <div class="input-container">
-      Körpergewicht (in kg) <input v-model="weight" type="number" name="weight" id="weight"/><br><br/>  <button id="calculate" @click="calculateWeight">Calculate</button>
-      </div>
+        <div class="input-container">
+          Körpergewicht (in kg) <input v-model="weight" type="number" name="weight" id="weight"/><br><br/>  <button id="calculate" @click="calculateWeight">Calculate</button>
+        </div>
 
-      Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount"
-                                                                   id="amount"/> <br><br/>
-      Wie viel Wasser hast du getrunken ? (in Liter) <input v-model="getrunkenField" type="number" name="getrunken"
-                                                            id="getrunken"/> <br><br/>
-      <button id="adding" type="button" @click="addRow()">Add</button>
-      <br><br/>
+        Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount"
+                                                                     id="amount"/> <br><br/>
+        Wie viel Wasser hast du getrunken ? (in Liter) <input v-model="getrunkenField" type="number" name="getrunken"
+                                                              id="getrunken"/> <br><br/>
+        <button id="adding" type="button" @click="addRow()">Add</button>
+        <br><br/>
 
         <div v-if="result !== null">
           <p>Dein Bedarf liegt bei: {{ result }} L</p>
@@ -80,7 +80,7 @@
 
 <script>
 
-let wasserId;
+let wasserId = 0;
 let getrunken = 0;
 let result = 0;
 export default {
@@ -276,13 +276,13 @@ export default {
     },
 
     checker(){
-       var option = confirm('Willst du deinen vorgeschlagenen Bedarfswert ('+this.result+ 'L) als Ziel nutzen ?' );
-        if(option === true){
+      var option = confirm('Willst du deinen vorgeschlagenen Bedarfswert ('+this.result+ 'L) als Ziel nutzen ?' );
+      if(option === true){
         this.amountField = this.result.toFixed(2);
-        }
-       if(option === false){
-         event.preventDefault();
-       }
+      }
+      if(option === false){
+        event.preventDefault();
+      }
 
 
     },

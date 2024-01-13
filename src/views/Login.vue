@@ -1,7 +1,6 @@
 <template>
-  <div class="login">
-    <div id="okta-sign-in-container"></div>
-  </div>
+
+
 </template>
 
 <script>
@@ -11,7 +10,7 @@
 //import { onMounted, onUnmounted, nextTick } from 'vue'
 
 export default {
-  name: 'LoginView'
+
 }
 /*
 onMounted(() => {

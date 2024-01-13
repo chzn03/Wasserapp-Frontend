@@ -1,9 +1,9 @@
 <template>
   <div id="home" class="home">
     <div v-if="!this.$root.authenticated">
-      <p>Hello, Vue.</p>
+      <p></p>
       <router-link role="button" to="/login">
-        Login
+
       </router-link>
     </div>
 
