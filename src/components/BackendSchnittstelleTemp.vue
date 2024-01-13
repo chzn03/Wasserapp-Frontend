@@ -10,7 +10,7 @@
     <h1 id="greeting">{{ greeting }}</h1>
 
     <section id="intro">
-      <h2>Willkommen bei Drinking Water is fun!</h2>
+      <h2 id="nutzername">Willkommen bei Drinking Water is fun!</h2>
       <p>Mit dieser App kannst du deinen Wasserverbrauch verfolgen. Starte jetzt!!</p>
     </section>
 
@@ -112,6 +112,10 @@ export default {
       const formattedMinute = ('0' + currentMin).slice(-2);
 
       this.greeting = `${this.daytime}! Es ist ${formattedHour}:${formattedMinute}`;
+      if (sessionStorage.getItem('name') != null) {
+        const grussName = sessionStorage.getItem('name')
+        document.getElementById("nutzername").innerText = `Willkommen bei Drinking Water is fun! ${grussName}`;
+      }
     },
 
 
@@ -120,7 +124,6 @@ export default {
       row.remove();
 
     },
-
 
 
     updateTimer() {
@@ -139,7 +142,7 @@ export default {
       const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-      const timerText = `Du hast noch  ${hours}:${minutes}:${seconds} `+` um dein Ziel zu erreichen`;
+      const timerText = `Du hast noch  ${hours}:${minutes}:${seconds} ` + ` um dein Ziel zu erreichen`;
       document.getElementById('Reminder').innerText = timerText;
 
       if (timeDifference <= 0) {
@@ -150,12 +153,10 @@ export default {
 
     },
 
-    calculateWeight(){
+    calculateWeight() {
       if (this.weight !== null && !isNaN(this.weight)) {
-        this.result = this.weight * 30/1000;
-      }
-
-      else {
+        this.result = this.weight * 30 / 1000;
+      } else {
         alert('Please enter a valid weight.');
       }
       this.checker()
@@ -275,12 +276,12 @@ export default {
 
     },
 
-    checker(){
-      var option = confirm('Willst du deinen vorgeschlagenen Bedarfswert ('+this.result+ 'L) als Ziel nutzen ?' );
-      if(option === true){
+    checker() {
+      var option = confirm('Willst du deinen vorgeschlagenen Bedarfswert (' + this.result + 'L) als Ziel nutzen ?');
+      if (option === true) {
         this.amountField = this.result.toFixed(2);
       }
-      if(option === false){
+      if (option === false) {
         event.preventDefault();
       }
 
@@ -289,7 +290,7 @@ export default {
     save() {
       const endpoint = 'http://localhost:8080/Wasser'
       const data = {
-        //owner: this.claims.email,
+        owner: localStorage.getItem('mail'),
         date: new Date().getDate(),
         tagesziel: this.amountField,
         getrunken: this.getrunkenField
@@ -309,10 +310,10 @@ export default {
           })
           .catch(error => console.log('error', error))
     },
-    /*
+
     change() {
       const data = {
-        //owner: this.claims.email,
+        owner: localStorage.getItem('mail'),
         tagesziel: this.amountField,
         getrunken: this.getrunkenField
       }
@@ -332,8 +333,8 @@ export default {
             console.error('Error:', error);
           })
     },
-    */
 
+    /*
     async setup() {
       if (this.$root.authenticated) {
         this.claims = await this.$auth.getUser()
@@ -343,7 +344,9 @@ export default {
   async created() {
     await this.setup()
   },
-  mounted() {
+   */
+    mounted() {
+    }
   }
 };
 </script>

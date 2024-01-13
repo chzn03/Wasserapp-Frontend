@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+
 import SignIn from "@/components/SignIn.vue";
 //import { LoginCallback } from '@okta/okta-vue'
 //import { navigationGuard } from '@okta/okta-vue'
@@ -20,12 +21,9 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
-  /*
-  {
-    path: '/login',
-    name: 'login',
-    component: LoginView
-  },
+
+
+    /*
   {
     path: '/login/callback',
     component: LoginCallback

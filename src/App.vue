@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       routes: [ // Define your routes here
-        { path: '/login', name: 'Login' },
+        { path: '/signIn', name: 'signIn' },
         { path: '/', name: 'home' },
         { path: '/about', name: 'About' },
         // Add more routes as needed
