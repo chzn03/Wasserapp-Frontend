@@ -10,7 +10,7 @@
     <h1 id="greeting">{{ greeting }}</h1>
 
     <section id="intro">
-      <h2 id="nutzername">Willkommen bei Drinking Water is fun!</h2>
+      <h2 id="nutzername">Willkommen bei Drinking Water is fun! {{ nutzername }}</h2>
       <p>Mit dieser App kannst du deinen Wasserverbrauch verfolgen. Starte jetzt!!</p>
     </section>
 
@@ -86,6 +86,7 @@ let result = 0;
 export default {
   data() {
     return {
+      nutzername:'',
       greeting: '',
       daytime: '',
       getrunkenField: '',
@@ -112,10 +113,6 @@ export default {
       const formattedMinute = ('0' + currentMin).slice(-2);
 
       this.greeting = `${this.daytime}! Es ist ${formattedHour}:${formattedMinute}`;
-      if(sessionStorage.getItem('name') != null){
-        const grussName = sessionStorage.getItem('name')
-        document.getElementById("nutzername").innerText = `Willkommen bei Drinking Water is fun! ${grussName}`;
-      }
     },
 
 
@@ -142,14 +139,14 @@ export default {
       const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-      const timerText = `Du hast noch  ${hours}:${minutes}:${seconds} ` + ` um dein Ziel zu erreichen`;
-      document.getElementById('Reminder').innerText = timerText;
+      document.getElementById('Reminder').innerText = `Du hast noch  ${hours}:${minutes}:${seconds} ` + ` um dein Ziel zu erreichen`;
 
       if (timeDifference <= 0) {
         // Countdown erreicht, handle entsprechend
         clearInterval(this.countdownInterval);
         document.getElementById('Reminder').innerText = "Mitternacht ist erreicht!";
       }
+      this.nutzername = sessionStorage.getItem('name')
 
     },
 
@@ -288,9 +285,10 @@ export default {
 
     },
     save() {
+      let owner = localStorage.getItem('mail');
       const endpoint = 'http://localhost:8080/Wasser'
       const data = {
-        owner: localStorage.getItem('mail'),
+        owner: owner,
         date: new Date().getDate(),
         tagesziel: this.amountField,
         getrunken: this.getrunkenField
@@ -309,28 +307,6 @@ export default {
             console.log('Success ', wasserId)
           })
           .catch(error => console.log('error', error))
-    },
-    change() {
-      const data = {
-        owner: localStorage.getItem('mail'),
-        tagesziel: this.amountField,
-        getrunken: this.getrunkenField
-      }
-      const reqOptions = {
-        method: 'POST',
-        headers: {
-          'content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      }
-      fetch('http://localhost/update', reqOptions)
-          .then(response => response.json)
-          .then(result => {
-            console.log(result)
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          })
     },
     /*
     async setup() {
