@@ -1,19 +1,19 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/signIn">Sign IN</router-link>
-<!--
-    <router-link to="/login" v-if="!authenticated">
-      Login
-    </router-link> |
-    <router-link to="/profile" v-if="authenticated" >
-      Profile
-    </router-link> |
-    <a v-if="authenticated" v-on:click="logout()">
-      Logout
-    </a>
-    -->
+  <div id="app">
+    <AppNavbar :routes="routes" />
+
+
+    <!--
+        <router-link to="/login" v-if="!authenticated">
+          Login
+        </router-link> |
+        <router-link to="/profile" v-if="authenticated" >
+          Profile
+        </router-link> |
+        <a v-if="authenticated" v-on:click="logout()">
+          Logout
+        </a>
+        -->
   </div>
   <router-view/>
 </template>
@@ -26,9 +26,26 @@ import { RouterLink, RouterView, useRoute } from 'vue-router'
 //const $auth = useAuth()
 //const $route = useRoute()
 //const authenticated = ref(false)
+
+
+import AppNavbar from '@/views/AppNavbar.vue'; // Adjust the path as needed
+
 export default {
-  name: 'app',
-}
+  components: {
+    AppNavbar,
+  },
+  data() {
+    return {
+      routes: [ // Define your routes here
+        { path: '/signIn', name: 'signIn' },
+        { path: '/', name: 'home' },
+        { path: '/about', name: 'About' },
+        {path: 'verlauf', name: 'Verlauf'}
+        // Add more routes as needed
+      ],
+    };
+  },
+};
 /*
 async function logout() {
   await $auth.signOut()

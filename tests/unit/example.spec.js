@@ -21,6 +21,7 @@ describe('App', () => {
     const updatedRowCount = wrapper.findAll('#Wasserstand tbody tr').length;
     expect(updatedRowCount).toBe(initialRowCount + 1);
   });
+
   it('deletes a row to the table when deleteRow method is called', () => {
     const wrapper = mount(App);
     const initialRowCount = wrapper.findAll('#Wasserstand tbody tr').length;
