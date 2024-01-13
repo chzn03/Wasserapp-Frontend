@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-
+import VerlaufPage from "@/components/VerlaufPage";
 import SignIn from "@/components/SignIn.vue";
 //import { LoginCallback } from '@okta/okta-vue'
 //import { navigationGuard } from '@okta/okta-vue'
@@ -21,6 +21,18 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
+  {
+    path: '/signIn',
+    name: 'signIn',
+    component: SignIn
+  },
+
+  {
+    path: '/verlauf',
+    name: 'verlauf',
+    component: VerlaufPage
+  }
+
 
 
     /*
@@ -36,12 +48,8 @@ const routes = [
     }
   }
    */
-  {
-    path: '/signIn',
-    name: 'signIn',
-    component: SignIn
-  }
-]
+
+  ]
 
 const router = createRouter({
   history: createWebHistory(process.env.Base_URL),

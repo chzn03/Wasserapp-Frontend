@@ -40,6 +40,7 @@ export default {
         { path: '/signIn', name: 'signIn' },
         { path: '/', name: 'home' },
         { path: '/about', name: 'About' },
+        {path: 'verlauf', name: 'Verlauf'}
         // Add more routes as needed
       ],
     };

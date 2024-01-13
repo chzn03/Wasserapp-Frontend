@@ -31,9 +31,9 @@
           Körpergewicht (in kg) <input v-model="weight" type="number" name="weight" id="weight"/><br><br/>  <button id="calculate" @click="calculateWeight">Calculate</button>
         </div>
 
-        Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount"
+        Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount" step="0.2"
                                                                      id="amount"/> <br><br/>
-        Wie viel Wasser hast du getrunken ? (in Liter) <input v-model="getrunkenField" type="number" name="getrunken"
+        Wie viel Wasser hast du getrunken ? (in Liter) <input v-model="getrunkenField" type="number" name="getrunken" step="0.1"
                                                               id="getrunken"/> <br><br/>
         <button id="adding" type="button" @click="addRow()">Add</button>
         <br><br/>
@@ -362,7 +362,7 @@ export default {
 
 body {
   font-family: Montserrat;
-  background-color: black;
+  background-color: white;
 }
 
 #greeting {
@@ -476,6 +476,13 @@ table th {
   font-size: larger;
 }
 
+#forinput{
+  font-style: normal;
+  color: whitesmoke;
+  font-family: Superclarendon, 'Bookman Old Style', 'URW Bookman', 'URW Bookman L', 'Georgia Pro', Georgia, serif;
+  font-weight: normal;
+}
+
 
 #adding {
   text-align: center;
@@ -520,19 +527,38 @@ table th {
 }
 
 
+
 #background {
   position: absolute;
+  margin: 0;
   width: 100%;
-  height: 200vh;
-  background: cornflowerblue;
+  background: linear-gradient(-45deg, black, darkblue, #23a6d5, darkblue);
+  background-size: 400% 400%;
+  animation: gradient 30s ease infinite;
+  height: 300vh;
   overflow: hidden;
   z-index: -1;
 }
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 100%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+
+}
+
+
 
 .input-container {
   display: flex;
   align-items: center;
 }
-
-
 </style>
