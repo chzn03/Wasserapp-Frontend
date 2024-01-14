@@ -147,7 +147,6 @@ export default {
         clearInterval(this.countdownInterval);
         document.getElementById('Reminder').innerText = "Mitternacht ist erreicht!";
       }
-      this.nutzername = sessionStorage.getItem('name')
 
     },
 
@@ -283,11 +282,12 @@ export default {
 
     },
     save() {
-      let owner = localStorage.getItem('mail');
+      let owner = sessionStorage.getItem('mail');
+      const currentDate = new Date().toISOString().split('T')[0];
       const endpoint = 'http://localhost:8080/Wasser'
       const data = {
         owner: owner,
-        date: new Date().getDate(),
+        date: currentDate,
         tagesziel: this.amountField,
         getrunken: this.getrunkenField
       }
@@ -317,10 +317,15 @@ export default {
     await this.setup()
   },
  */
-    mounted() {
-    }
+  },
+  mounted() {
+    this.nutzername = sessionStorage.getItem('name')
   }
 };
+window.onclose = function (){
+  sessionStorage.clear();
+}
+
 </script>
 
 <style>
