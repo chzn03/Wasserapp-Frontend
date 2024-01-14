@@ -28,7 +28,7 @@ export default {
       const endpoint = 'http://localhost:8080/User'
       const data = {
         name: userName,
-        mail: userMail,
+        email: userMail,
       }
       const reqOptions = {
         method: 'POST',

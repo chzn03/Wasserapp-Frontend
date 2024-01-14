@@ -10,7 +10,7 @@
     <h1 id="greeting">{{ greeting }}</h1>
 
     <section id="intro">
-      <h2 id="nutzername">Willkommen bei Drinking Water is fun!</h2>
+      <h2 id="nutzername">Willkommen bei Drinking Water is fun! {{ nutzername }}</h2>
       <p>Mit dieser App kannst du deinen Wasserverbrauch verfolgen. Starte jetzt!!</p>
     </section>
 
@@ -27,16 +27,16 @@
       <h1 id="Tabellenüberschrift">Wasserstand</h1>
 
       <div>
-        <div class="input-container">
-          Körpergewicht (in kg) <input v-model="weight" type="number" name="weight" id="weight"/><br><br/>  <button id="calculate" @click="calculateWeight">Calculate</button>
-        </div>
+      <div class="input-container">
+      Körpergewicht (in kg) <input v-model="weight" type="number" name="weight" id="weight"/><br><br/>  <button id="calculate" @click="calculateWeight">Calculate</button>
+      </div>
 
-        Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount" step="0.2"
-                                                                     id="amount"/> <br><br/>
-        Wie viel Wasser hast du getrunken ? (in Liter) <input v-model="getrunkenField" type="number" name="getrunken" step="0.1"
-                                                              id="getrunken"/> <br><br/>
-        <button id="adding" type="button" @click="addRow()">Add</button>
-        <br><br/>
+      Wie viel Wasser möchtest du heute Trinken? (in Liter) <input v-model="amountField" type="number" name="amount" step="0.2"
+                                                                   id="amount"/> <br><br/>
+      Wie viel Wasser hast du getrunken ? (in Liter) <input v-model="getrunkenField" type="number" name="getrunken" step="0.1"
+                                                            id="getrunken"/> <br><br/>
+      <button id="adding" type="button" @click="addRow()">Add</button>
+      <br><br/>
 
         <div v-if="result !== null">
 
@@ -80,12 +80,13 @@
 
 <script>
 
-let wasserId = 0;
+let wasserId;
 let getrunken = 0;
 let result = 0;
 export default {
   data() {
     return {
+      nutzername:'',
       greeting: '',
       daytime: '',
       getrunkenField: '',
@@ -112,17 +113,14 @@ export default {
       const formattedMinute = ('0' + currentMin).slice(-2);
 
       this.greeting = `${this.daytime}! Es ist ${formattedHour}:${formattedMinute}`;
-      if (sessionStorage.getItem('name') != null) {
-        const grussName = sessionStorage.getItem('name')
-        document.getElementById("nutzername").innerText = `Willkommen bei Drinking Water is fun! ${grussName}`;
-      }
     },
+
+
 
 
     deleteRow(rowId) {
       const row = document.getElementById(rowId);
       row.remove();
-
     },
 
 
@@ -142,14 +140,14 @@ export default {
       const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-      const timerText = `Du hast noch  ${hours}:${minutes}:${seconds} ` + ` um dein Ziel zu erreichen`;
-      document.getElementById('Reminder').innerText = timerText;
+      document.getElementById('Reminder').innerText = `Du hast noch  ${hours}:${minutes}:${seconds} ` + ` um dein Ziel zu erreichen`;
 
       if (timeDifference <= 0) {
         // Countdown erreicht, handle entsprechend
         clearInterval(this.countdownInterval);
         document.getElementById('Reminder').innerText = "Mitternacht ist erreicht!";
       }
+      this.nutzername = sessionStorage.getItem('name')
 
     },
 
@@ -268,9 +266,6 @@ export default {
       } catch (error) {
         console.error('Starte die Webseite neu:', error);
         // Handle the error appropriately (e.g., show an error message to the user)
-      } finally {
-        // Enable the button regardless of success or failure
-        document.getElementById('adding').disabled = false;
       }
 
 
@@ -288,9 +283,10 @@ export default {
 
     },
     save() {
+      let owner = localStorage.getItem('mail');
       const endpoint = 'http://localhost:8080/Wasser'
       const data = {
-        owner: localStorage.getItem('mail'),
+        owner: owner,
         date: new Date().getDate(),
         tagesziel: this.amountField,
         getrunken: this.getrunkenField
@@ -305,35 +301,11 @@ export default {
       fetch(endpoint, reqOptions)
           .then(response => response.json)
           .then(data => {
-            wasserId = data.Id;
-            console.log('Success ', wasserId)
+
+            console.log('Success ')
           })
           .catch(error => console.log('error', error))
     },
-
-    change() {
-      const data = {
-        owner: localStorage.getItem('mail'),
-        tagesziel: this.amountField,
-        getrunken: this.getrunkenField
-      }
-      const reqOptions = {
-        method: 'POST',
-        headers: {
-          'content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      }
-      fetch('http://localhost/update', reqOptions)
-          .then(response => response.json)
-          .then(result => {
-            console.log(result)
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          })
-    },
-
     /*
     async setup() {
       if (this.$root.authenticated) {
@@ -344,7 +316,7 @@ export default {
   async created() {
     await this.setup()
   },
-   */
+ */
     mounted() {
     }
   }
@@ -561,4 +533,7 @@ table th {
   display: flex;
   align-items: center;
 }
+
+
+
 </style>
