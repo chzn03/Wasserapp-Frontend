@@ -39,7 +39,7 @@
         <br><br/>
 
         <div v-if="result !== null">
-          <p>Dein Bedarf liegt bei: {{ result }} L</p>
+
         </div>
       </div>
 
