@@ -63,7 +63,7 @@ body {
   justify-content: center;
   height: 100vh;
   margin: 0;
-  background-color: rgba(0, 0, 0, 0); /* Hintergrundfarbe der Seite */
+  background-color: white; /* Hintergrundfarbe der Seite */
 }
 
 .container {

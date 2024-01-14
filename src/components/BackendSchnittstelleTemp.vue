@@ -80,7 +80,6 @@
 
 <script>
 
-let wasserId;
 let getrunken = 0;
 let result = 0;
 export default {
@@ -116,14 +115,13 @@ export default {
     },
 
 
-
-
     deleteRow(rowId) {
       const row = document.getElementById(rowId);
       row.remove();
     },
 
 
+    /*
     updateTimer() {
       const currentDate = new Date();
       const midnight = new Date(
@@ -149,6 +147,8 @@ export default {
       }
 
     },
+     */
+
 
     calculateWeight() {
       if (this.weight !== null && !isNaN(this.weight)) {
@@ -181,6 +181,7 @@ export default {
         } else {
           this.daytime = 'Abend';
         }
+        /*
         const interval = setInterval(function () {
           const actualTime = new Date();
           const actualHour = actualTime.getHours();
@@ -196,6 +197,7 @@ export default {
           reminder.innerHTML = "Du hast kaum noch Zeit dein tägliches Ziel zu erreichen !!";
           document.body.style.background = 'red';
         }
+         */
 
         let resetGetrunken = parseFloat(getrunken);
         getrunken = parseFloat(getrunken) + parseFloat(document.getElementById('getrunken').value)
@@ -221,12 +223,14 @@ export default {
           notification.style.backgroundColor = 'green'; // Optional: Set color for goal achieved
         }
 
+        /*
         this.updateTimer();
 
         // Set an interval to update the timer every second
         const timerInterval = setInterval(() => {
           this.updateTimer();
         }, 1000);
+         */
 
 
         const table = document.getElementById("Wasserstand");
@@ -301,7 +305,6 @@ export default {
       fetch(endpoint, reqOptions)
           .then(response => response.json)
           .then(data => {
-
             console.log('Success ')
           })
           .catch(error => console.log('error', error))
