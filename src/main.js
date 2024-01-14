@@ -46,6 +46,9 @@ app.use(OktaVue, {
 
 // App mounten
 app.mount('#app');
+window.onclose = function (){
+    localStorage.clear();
+}
 
 // OktaAuth- und OktaSignIn-Instanzen exportieren
 //export {oktaAuth, oktaSignIn};

@@ -46,6 +46,9 @@ export default {
     };
   },
 };
+window.onclose = function (){
+  localStorage.clear();
+}
 /*
 async function logout() {
   await $auth.signOut()

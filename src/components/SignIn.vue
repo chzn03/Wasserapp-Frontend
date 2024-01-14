@@ -23,8 +23,8 @@ export default {
         return;
       }
       document.getElementById("Willkommenstext").innerText = `Willkommen ${userName}!`;
-      localStorage.setItem('name', userName);
-      localStorage.setItem('mail', userMail);
+      sessionStorage.setItem('name', userName);
+      sessionStorage.setItem('mail', userMail);
       const endpoint = 'http://localhost:8080/User'
       const data = {
         name: userName,
@@ -45,10 +45,13 @@ export default {
           .catch(error => console.log('error', error))
 
     },
-    mounted() {
-    }
+  },
+  mounted() {
   }
 };
+window.onclose = function (){
+  sessionStorage.clear();
+}
 
 
 </script>
