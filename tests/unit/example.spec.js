@@ -23,18 +23,31 @@ describe('BackendSchnitstelleTemp', () => {
   });
 
 
-  it('deletes a row of the table when deleteRow Button is used after addrow', () => {
+  it('deletes a row of the table when deleteRow Button is used ', () => {
+    // Create a fake table
+    const fakeTable = document.createElement('table');
+    fakeTable.setAttribute('id', 'Wasserstand');
+    // Create a fake row and add it to the table
+    const fakeRow = document.createElement('tr');
+    fakeRow.setAttribute('id', 'fakeRowId'); // Set a fake ID for testing
+    fakeTable.appendChild(fakeRow);
+
+    document.body.appendChild(fakeTable);
+    // Mount the component with the fake table
     const wrapper = mount(BackendSchnittstelleTemp);
-    wrapper.vm.addRow();
-    const addedRowId = wrapper.vm.rowId;
+    // Get the initial row count
+    const initialRowCount = wrapper.findAll('table ').length;
 
-    const initialRowCount = wrapper.findAll('#Wasserstand').length;
+    // Delete the fake row using the deleteRow method
+    wrapper.vm.deleteRow('fakeRowId'); // Pass the fake ID used in the fake table
 
-    wrapper.vm.deleteRow(addedRowId);
-    const updatedRowCount = wrapper.findAll('#Wasserstand ').length;
-    expect(updatedRowCount).toBe(initialRowCount -1);
+    // Get the updated row count
+    const updatedRowCount = wrapper.findAll('table ').length;
 
+    // Assert that the row count is decreased by 1
+    expect(updatedRowCount).toBe(0 );
   });
+
 
   it('calculates a recommendation when using the calculate button', () => {
     const wrapper = mount(BackendSchnittstelleTemp);

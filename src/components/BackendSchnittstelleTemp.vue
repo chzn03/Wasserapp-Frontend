@@ -116,8 +116,6 @@ export default {
     },
 
 
-
-
     deleteRow(rowId) {
       const row = document.getElementById(rowId);
       row.remove();
